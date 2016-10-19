@@ -44,8 +44,8 @@
 		}
 
 		public static function select($data) {
-			$table_name = static::$object;
-			$class_name = 'Model'.ucfirst($table_name);
+			$table_name = static::$tableName;
+			$class_name = 'Model'.ucfirst($object);
 			$primary_key = static::$primary;
 			try {
 				$sql = "SELECT * from `".$table_name."` WHERE `".$primary_key."` = :".$primary_key."";
