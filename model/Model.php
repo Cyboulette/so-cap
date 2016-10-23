@@ -1,4 +1,4 @@
-<?php 
+<?php
 	require_once File::build_path(array('config', 'Conf.php'));
 
 	class Model {
@@ -25,8 +25,8 @@
 		}
 
 		public static function selectAll() {
-			$table_name = static::$object;
-			$class_name = 'Model'.ucfirst($table_name);
+			$table_name = static::$tableName;
+			$class_name = 'Model'.ucfirst(static::$object);
 			try {
 			  $sql = "SELECT * FROM `".$table_name."`";
 			  $rep = Model::$pdo->query($sql);
@@ -45,7 +45,7 @@
 
 		public static function select($data) {
 			$table_name = static::$tableName;
-			$class_name = 'Model'.ucfirst($object);
+			$class_name = 'Model'.ucfirst(static::$object);
 			$primary_key = static::$primary;
 			try {
 				$sql = "SELECT * from `".$table_name."` WHERE `".$primary_key."` = :".$primary_key."";
@@ -72,6 +72,15 @@
 				}
 				die();
 			}
+		}
+
+
+		//Gestion des erreurs pour tous les modèles !!
+		public static function error($error) {
+			$displayError = $error;
+			$view = 'error';
+			$pagetitle= 'So\'Cap - Erreur';
+			require File::build_path(array('view', 'view.php'));
 		}
 	}
 

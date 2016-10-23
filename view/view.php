@@ -17,7 +17,7 @@
 		?>
 		
 		<p style="border: 1px solid black;text-align:center;padding-right:1em;">
-		  Site de covoiturage de Quentin
+		  So'Cap
 		</p>
 	</body>
 </html>

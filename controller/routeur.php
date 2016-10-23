@@ -1,4 +1,4 @@
-<?php 
+<?php
 	require_once File::build_path(array('controller', 'ControllerDefault.php'));
 
 	if(isset($_GET['controller']) && !empty(($_GET['controller']))) {
@@ -23,7 +23,7 @@
 				ControllerDefault::error("Cette page n'existe pas");
 			}
 		} else {
-			ControllerDefault::error("Vous n'avez pas les accès nécessaires pour accéder à cette fonctionnalité");
+			ControllerDefault::error("Cette fonctionnalité n'est pas encore implémentée");
 		}
 	} else {
 		ControllerDefault::index();

@@ -37,12 +37,12 @@
 		}
 
 
-		   public static function error($error) {
-		      $displayError = $error;
-		      $view = 'error';
-		      $pagetitle= 'So\'Cap - Erreur';
-		      require File::build_path(array('view', 'view.php'));
-		   }
+		public static function error($error) {
+			$displayError = $error;
+			$view = 'error';
+			$pagetitle= 'So\'Cap - Erreur';
+			require File::build_path(array('view', 'view.php'));
+		}
 
 
 	}

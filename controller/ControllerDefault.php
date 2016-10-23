@@ -1,6 +1,4 @@
-<?php 
-//require_once File::build_path(array('model', 'ModelUtilisateur.php'));
-
+<?php
 class ControllerDefault {
 
 	protected static $object = 'default';
@@ -11,11 +9,11 @@ class ControllerDefault {
 		require File::build_path(array('view', 'view.php'));
 	}
 
-   public static function error($error) {
-      $displayError = $error;
-      $view = 'error';
-      $pagetitle= 'So\'Cap - Erreur';
-      require File::build_path(array('view', 'view.php'));
-   }
+	public static function error($error) {
+		$displayError = $error;
+		$view = 'error';
+		$pagetitle= 'So\'Cap - Erreur';
+		require File::build_path(array('view', 'view.php'));
+	}
 }
 ?>
