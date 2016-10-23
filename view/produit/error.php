@@ -1,7 +1,7 @@
 <?php
 	if(isset($displayError) && !empty($displayError)) {
-		echo '<h2>'.$error.'</h2>';
+		echo '<div class="alert alert-danger">'.$error.'</div>';
 	} else {
-		echo '<h2>Erreur inconnue</h2>';
+		echo '<div class="alert alert-danger">Erreur inconnue</div>';
 	}
 ?>

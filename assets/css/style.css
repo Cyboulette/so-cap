@@ -1,5 +1,5 @@
 body {
-	padding-top: 50px;
+	padding-top: 80px;
 }
 
 .produit {
@@ -20,4 +20,9 @@ body {
 
 .produit span {
 	display: block;
+}
+
+.h1, .h2, .h3, h1, h2, h3 {
+	padding-top: 0px;
+	margin-top: 0px;
 }
