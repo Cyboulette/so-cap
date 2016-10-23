@@ -15,5 +15,13 @@ class ControllerDefault {
 		$pagetitle= 'So\'Cap - Erreur';
 		require File::build_path(array('view', 'view.php'));
 	}
+
+	public static function active($url) {
+		$urlToExplode = $_SERVER['REQUEST_URI'];
+		$urlExploded = explode("/", $_SERVER['REQUEST_URI']);
+		if($urlExploded[2] == $url) {
+			echo 'class="active"';
+		}
+	}
 }
 ?>
