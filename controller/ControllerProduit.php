@@ -17,19 +17,7 @@ class ControllerProduit {
 	}
 
    public static function read() {
-      if(isset($_GET['login'])) {
-         $u = ModelProduit::select($_GET['login']);
-      } else {
-         $u = false;
-      }
-
-      if($u != false) {
-         $view = 'detail';
-         $pagetitle= 'Détail d\'une utilisateur';
-         require File::build_path(array('view', 'view.php'));
-      } else {
-         ModelProduit::error("Cet utilisateur n'existe pas :'(");
-      }
+      ModelProduit::error("Fonction en cours de développement ...");
    }
 }
 ?>

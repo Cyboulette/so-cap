@@ -38,5 +38,28 @@ class ModelProduit extends Model {
 	        $this->prix = $prix;
 	    }
 	}
+
+	public function getStock() {
+		try {
+			$sql = "SELECT * from `stocks` WHERE `idProduit` = :idProduit";
+			$req_stocks = Model::$pdo->prepare($sql);
+
+			$values = array(
+				'idProduit' => $this->idProduit
+			);
+
+			$req_stocks->execute($values);
+			$result = $req_stocks->fetch();
+
+			if(empty($result)) {
+				// Le stock n'a pas été crée.
+				return 0;
+			} else {
+				return $result['stockRestant'];
+			}
+		} catch(PDOException $e) {
+			return 0;
+		}
+	}
 }
 ?>
