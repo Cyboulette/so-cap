@@ -40,11 +40,22 @@
 	      </div>
 	    </nav>
 
-	    <div class="container">
-			<?php
-				$filepath = File::build_path(array("view", static::$object, "$view.php"));
-				require $filepath;
-			?>
+	    <div class="container-fluid">
+	    	<div class="row">
+				<div class="col-sm-3 col-md-2 sidebar">
+					<ul class="nav nav-sidebar">
+						<li class="active"><a href="#">Test <span class="sr-only">(current)</span></a></li>
+						<li><a href="#">Test #2</a></li>
+					</ul>
+				</div>
+
+				<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+					<?php
+						$filepath = File::build_path(array("view", static::$object, "$view.php"));
+						require $filepath;
+					?>
+				</div>
+	    	</div>
 		</div>
 
 		<?php 

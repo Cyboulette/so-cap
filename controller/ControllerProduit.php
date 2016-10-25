@@ -17,7 +17,36 @@ class ControllerProduit {
 	}
 
    public static function read() {
-      ModelProduit::error("Fonction en cours de développement ...");
+      if(isset($_GET['idProduit'])) {
+         $p = ModelProduit::select($_GET['idProduit']);
+      } else {
+         $p = false;
+      }
+
+      if($p != false) {
+         $view = 'detail';
+         $pagetitle= 'So\'Cap - Affichage d\'un produit';
+         require File::build_path(array('view', 'view.php'));
+      } else {
+         ModelProduit::error("Ce produit n'est pas disponible");
+      }
+   }
+
+   public static function addCart() {
+      if(isset($_GET['idProduit'])) {
+         $produit = ModelProduit::select($_GET['idProduit']);
+         if($produit != false) {
+            if($produit->getStock() != 0) {
+               $view = 'addCart';
+               $pagetitle= 'So\'Cap - Achat d\'un produit';
+               require File::build_path(array('view', 'view.php'));               
+            } else {
+               ModelProduit::error("Impossible d'acheter ce produit, nous ne l'avons plus en stock");
+            }
+         } else {
+            ModelProduit::error("Ce produit n'est pas disponible");
+         }
+      }
    }
 }
 ?>

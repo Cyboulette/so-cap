@@ -9,9 +9,9 @@
 			'password' => ''
 		);
 
-		/*
-		Configuration pour l'IUT
-		static private $databases = array (
+		
+		//Configuration pour l'IUT
+		/*static private $databases = array (
 			'hostname' => 'infolimon',
 			'database' => 'railot',
 			'login' => 'railot',

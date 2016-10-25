@@ -9,6 +9,7 @@
 		$description = strip_tags($p->get('description'));
 		$prix = $p->get('prix');
 		$stock = $p->getStock();
+		$disabledAchat = ($p->getStock() == 0 ? 'btn-default disabled' : 'btn-success');
 	?>
 		<div class="col-md-4" data-id="<?=$idProduit?>">
 			<div class="produit">
@@ -27,7 +28,7 @@
 
 				<div class="buttons">
 					<a href="?controller=produit&action=read&idProduit=<?=$idProduit?>" class="btn btn-primary btn-xs"><i class="fa fa-search" aria-hidden="true"></i> Voir le détail</a>
-					<a href="" class="btn btn-success btn-xs"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Ajouter au panier</a>
+					<a href="index.php?controller=produit&action=addCart&idProduit=<?=$idProduit?>" class="btn <?=$disabledAchat?> btn-xs"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Ajouter au panier</a>
 				</div>
 			</div>
 		</div>
