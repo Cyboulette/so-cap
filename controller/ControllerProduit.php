@@ -24,6 +24,20 @@ class ControllerProduit {
       }
 
       if($p != false) {
+         $imagesProduit = $p->getImages();
+         $dataImages = array();
+         $order = 0;
+         if($imagesProduit != false) {
+            foreach ($imagesProduit as $imageProduit) {
+               if(file_exists(File::build_path(array('assets/images/produits/', $imageProduit['nomImage'])))) {
+                  $dataImages[$imageProduit['idVisuel']] = array(
+                     'order' => $order,
+                     'url' => 'assets/images/produits/'.$imageProduit['nomImage']
+                  );
+                  $order++;
+               }
+            }
+         }
          $view = 'detail';
          $pagetitle= 'So\'Cap - Affichage d\'un produit';
          require File::build_path(array('view', 'view.php'));

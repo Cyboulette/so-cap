@@ -1,7 +1,7 @@
 <?php 
 $idProduit = $p->get('idProduit');
 $label = strip_tags($p->get('label'));
-$categorieProduit = $p->get('categorieProduit'); // A gérer ?
+$categorieProduit = $p->get('categorieProduit');
 $description = strip_tags($p->get('description'));
 $prix = $p->get('prix');
 $stock = $p->getStock();
@@ -13,9 +13,40 @@ $disabledAchat = ($p->getStock() == 0 ? 'btn-default disabled' : 'btn-success');
 <div class="row">
 	<div class="produit">
 		<div class="image">
-			<img src="assets/images/no_visu.png" />
-			<img src="assets/images/no_visu.png" />
-			<img src="assets/images/no_visu.png" />
+			<?php 
+				if(empty($dataImages)) {
+					echo '<div class="alert alert-info">Nous ne disposons d\'aucun visuel pour ce produit</div>';
+				} else { ?>
+					<div id="carousel-produits" class="carousel slide" data-ride="carousel">
+						<ol class="carousel-indicators">
+							<?php foreach ($dataImages as $image) { 
+								$isActive = ($image['order'] == 0 ? 'class="active"' : '');
+							?>
+								<li data-target="#carousel-produits" data-slide-to="<?=$image['order']?>" <?=$isActive?>></li>
+							<?php } ?>
+						</ol>
+
+						<div class="carousel-inner" role="listbox">
+							<?php foreach ($dataImages as $image) { 
+								$isActive = ($image['order'] == 0 ? 'class="item active"' : 'class="item"');
+							?>
+								<div <?=$isActive?>>
+									<img src="<?=$image['url']?>" alt="Visuel d'un produit" />
+								</div>
+							<?php } ?>
+						</div>
+
+						<a class="left carousel-control" href="#carousel-produits" role="button" data-slide="prev">
+							<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+							<span class="sr-only">Image précédente</span>
+						</a>
+						<a class="right carousel-control" href="#carousel-produits" role="button" data-slide="next">
+							<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+							<span class="sr-only">Image suivante</span>
+						</a>
+					</div>
+				<?php }
+			?>
 		</div>
 
 
@@ -37,7 +68,6 @@ $disabledAchat = ($p->getStock() == 0 ? 'btn-default disabled' : 'btn-success');
 		<ul>
 			<li>Faire un espace commentaire ?</li>
 			<li>Faire un espace avis ?</li>
-			<li>Slider pour les images ?</li>
 		</ul>
 	</div>
 </div>

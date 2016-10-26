@@ -41,7 +41,7 @@ class ModelProduit extends Model {
 
 	public function getStock() {
 		try {
-			$sql = "SELECT * from `stocks` WHERE `idProduit` = :idProduit";
+			$sql = "SELECT * FROM `stocks` WHERE `idProduit` = :idProduit";
 			$req_stocks = Model::$pdo->prepare($sql);
 
 			$values = array(
@@ -59,6 +59,29 @@ class ModelProduit extends Model {
 			}
 		} catch(PDOException $e) {
 			return 0;
+		}
+	}
+
+	public function getImages() {
+		try {
+			$sql = "SELECT * FROM `visuelsProduits` WHERE `idProduit` = :idProduit";
+			$req_images = Model::$pdo->prepare($sql);
+
+			$values = array(
+				'idProduit' => $this->idProduit
+			);
+
+			$req_images->execute($values);
+			$result = $req_images->fetchAll();
+
+			if(empty($result)) {
+				return false;
+			} else {
+				return $result;
+			}
+
+		} catch(PDOException $e) {
+			return false;
 		}
 	}
 }
