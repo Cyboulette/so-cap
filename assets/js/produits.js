@@ -4,7 +4,14 @@ $("#navigationProduits ul li a").on('click', function(e) {
 	var isActive = $(this).parent().hasClass('active');
 	if(datatri != undefined) {
 		// Ajax
-		var data = 'optionTri='+datatri;
+		if(datatri == "categorie") {
+			var categorieID = $(this).parent().attr('data-categorie');
+			var data = 'optionTri='+datatri+'&categorieID='+categorieID;
+		} else {
+			var data = 'optionTri='+datatri;
+		}
+
+		console.log(data);
 		$.ajax({
 			type: "POST",
 			url: "lib/ajax/triProduits.php",
@@ -13,11 +20,15 @@ $("#navigationProduits ul li a").on('click', function(e) {
 			success: function(retour) {
 				if(isActive != true) {
 					$("#navigationProduits .boutonsHaut li[class='active']").removeClass('active');
-					$("#navigationProduits .boutonsHaut li[data-tri='"+datatri+"']").addClass('active');
+					if(datatri == "categorie") {
+						$("#navigationProduits .boutonsHaut li[data-categorie='"+categorieID+"']").addClass('active');
+					} else {
+						$("#navigationProduits .boutonsHaut li[data-tri='"+datatri+"']").addClass('active');
+					}
 				}
 				if(retour.result == true) {
-					//console.log(retour.produits);
 					$(".displayProduits").html(retour.produits);
+					$(".displayProduits").prepend('<div class="container-fluid"><h4>'+retour.title+'</h4></div>');
 				} else {
 					$(".displayProduits").html('<div class="alert alert-danger">Aucun produit ne correspond à vos critères de recherche</div>');
 				}

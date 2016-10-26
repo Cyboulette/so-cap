@@ -9,8 +9,14 @@
 		$produitsFinaux = array();
 		if($optionTri == 'all') {
 			$tab_p = ModelProduit::selectAll();
+			$retour['title'] = 'Tous nos produits :';
 		} elseif($optionTri == 'selection') {
 			$tab_p = ModelProduit::selectCustom('favorited', '1');
+			$retour['title'] = 'Produits sélectionnés par notre équipe :';
+		} elseif($optionTri == 'categorie') {
+			$categorieID = strip_tags($_POST['categorieID']);
+			$tab_p = ModelProduit::selectCustom('categorieProduit', $categorieID);
+			$retour['title'] = 'Produits de la catégorie TEST :';
 		}
 
 		if($tab_p != false) {

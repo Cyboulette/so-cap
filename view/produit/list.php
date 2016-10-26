@@ -17,8 +17,7 @@
 				<li class="dropdown">
 					<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Catégories <span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li></li>
-						<li></li>
+						<?=$displayCategories?>
 					</ul>
 				</li>
 			</ul>
@@ -33,6 +32,7 @@
 </nav>
 
 <div class="row displayProduits">
+	<div class="container-fluid"><h4>Tous nos produits :</h4></div>
 	<?php
 	foreach ($tab_p as $p) { 
 		$idProduit = $p->get('idProduit');

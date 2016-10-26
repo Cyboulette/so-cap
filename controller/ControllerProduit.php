@@ -1,5 +1,6 @@
 <?php
 require_once File::build_path(array('model', 'ModelProduit.php'));
+require_once File::build_path(array('model', 'ModelCategorie.php'));
 
 class ControllerProduit {
 
@@ -9,6 +10,13 @@ class ControllerProduit {
 		$tab_p = ModelProduit::selectAll();
 		$view = 'list';
 		$pagetitle= 'So\'Cap - Liste des produits';
+
+      $listCategories = ModelCategorie::selectAll();
+      $displayCategories = '';
+      foreach ($listCategories as $categorie) {
+         $displayCategories .= '<li data-tri="categorie" data-categorie="'.$categorie->get('idCategorie').'"><a href="">'.strip_tags($categorie->get('label')).'</a></li>';
+      }
+
       if(!empty($tab_p)) {
          require File::build_path(array('view', 'view.php'));
       } else {

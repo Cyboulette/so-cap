@@ -86,5 +86,24 @@ class ModelProduit extends Model {
 			return false;
 		}
 	}
+
+	public function getAllCategories() {
+		try {
+			$sql = "SELECT * FROM `categories`";
+			$req_categ = Model::$pdo->prepare($sql);
+
+			$req_categ->execute();
+			$result = $req_categ->fetchAll();
+
+			if(empty($result)) {
+				return false;
+			} else {
+				return $result;
+			}
+
+		} catch(PDOException $e) {
+			return false;
+		}
+	}
 }
 ?>
