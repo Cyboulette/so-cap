@@ -4,9 +4,9 @@
 <table class="table table-hover">
    <thead> <!-- En-tête du tableau -->
        <tr>
-           <th>commande n°</th>
-           <th>date de la commande</th>
-           <th>prix</th>
+           <th>Commande n°</th>
+           <th>Date de la commande</th>
+           <th>Prix</th>
        </tr>
 
    </thead>

@@ -8,7 +8,7 @@ class ControllerCommande {
 	public static function readAll() {
 		$tab_c = ModelCommande::selectAll();
       $view = 'list';
-		$pagetitle= 'So\'Cap - Liste des commande';
+		$pagetitle= 'So\'Cap - Liste des commandes';
       require File::build_path(array('view', 'view.php'));
       
 	}
@@ -19,32 +19,11 @@ class ControllerCommande {
       } else {
          $c = false;
       }
-      $p = "SELECT * from produitsCommandes WHERE `idCommande ='' :".$_GET['idCommande']."";
-
-
-
-
       if($c != false) {
          $pagetitle= 'So\'Cap - Affichage d\'une commande';
          $view = 'detail';
+         $produitsCommandes = $c->getProduits();
          require File::build_path(array('view', 'view.php'));
-      }
-   }
-
-   public static function addCart() {
-      if(isset($_GET['idProduit'])) {
-         $produit = ModelProduit::select($_GET['idProduit']);
-         if($produit != false) {
-            if($produit->getStock() != 0) {
-               $view = 'addCart';
-               $pagetitle= 'So\'Cap - Achat d\'un produit';
-               require File::build_path(array('view', 'view.php'));               
-            } else {
-               ModelProduit::error("Impossible d'acheter ce produit, nous ne l'avons plus en stock");
-            }
-         } else {
-            ModelProduit::error("Ce produit n'est pas disponible");
-         }
       }
    }
 }
