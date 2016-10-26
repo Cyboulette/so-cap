@@ -8,6 +8,7 @@ class ModelProduit extends Model {
 	private $categorieProduit;
 	private $description;
 	private $prix;
+	private $favorited;
 
 	protected static $tableName = 'produits'; // Correspond au nom de la table SQL (pratique si différent du nom de l'objet)
 	protected static $object = 'produit'; // Correspond au nom de l'objet à créer (ici produit)
@@ -29,13 +30,14 @@ class ModelProduit extends Model {
 
 	// Le constructeur, qui peut accepter du NULL (dans le cas d'un FETCH::CLASS)
 	// Constructeur différent dans chaque ModelPAGE.php
-	public function __construct($idProduit = NULL, $label = NULL, $categorieProduit = NULL, $description = NULL, $prix = NULL) {
-	    if (!is_null($idProduit) && !is_null($label) && !is_null($categorieProduit) && !is_null($description) && !is_null($prix)) {
+	public function __construct($idProduit = NULL, $label = NULL, $categorieProduit = NULL, $description = NULL, $prix = NULL, $favorited = NULL) {
+	    if (!is_null($idProduit) && !is_null($label) && !is_null($categorieProduit) && !is_null($description) && !is_null($prix) && !is_null($favorited)) {
 	        $this->idProduit = $idProduit;
 	        $this->label = $label;
 	        $this->categorieProduit = $categorieProduit;
 	        $this->description = $description;
 	        $this->prix = $prix;
+	        $this->favorited = $favorited;
 	    }
 	}
 
