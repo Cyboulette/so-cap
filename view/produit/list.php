@@ -21,9 +21,9 @@
 					</ul>
 				</li>
 			</ul>
-			<form class="navbar-form navbar-left">
+			<form class="navbar-form navbar-left" id="rechercheForm">
 				<div class="form-group">
-					<input type="text" class="form-control" placeholder="Rechercher par nom">
+					<input type="text" class="form-control searchText" placeholder="Rechercher par nom">
 				</div>
 				<button type="submit" class="btn btn-default">Rechercher</button>
 			</form>

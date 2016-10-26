@@ -14,9 +14,29 @@
 			$tab_p = ModelProduit::selectCustom('favorited', '1');
 			$retour['title'] = 'Produits sélectionnés par notre équipe :';
 		} elseif($optionTri == 'categorie') {
-			$categorieID = strip_tags($_POST['categorieID']);
-			$tab_p = ModelProduit::selectCustom('categorieProduit', $categorieID);
-			$retour['title'] = 'Produits de la catégorie TEST :';
+			if(isset($_POST['categorieID']) && !empty($_POST['categorieID'])) {
+				$categorieID = strip_tags($_POST['categorieID']);
+				$categorieActual = ModelCategorie::select($categorieID);
+				$retour['title'] = 'Produits de la catégorie :';
+				if($categorieActual == false) {
+					$tab_p = false;
+				} else {
+					$tab_p = ModelProduit::selectCustom('categorieProduit', $categorieID);
+					$retour['title'] = 'Produits de la catégorie <u>'.$categorieActual->get('label').'</u> :';
+				}
+			} else {
+				$tab_p = false;
+			}
+		} elseif($optionTri == 'searchText') {
+			if(isset($_POST['text']) && !empty($_POST['text'])) {
+				$text = strip_tags($_POST['text']);
+				$retour['title'] = 'Recherche par nom de produit : ';
+				$tab_p = ModelProduit::selectText($text);
+			} else {
+				$tab_p = false;
+			}
+		} else {
+			$tab_p = false;
 		}
 
 		if($tab_p != false) {

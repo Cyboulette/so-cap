@@ -11,7 +11,6 @@ $("#navigationProduits ul li a").on('click', function(e) {
 			var data = 'optionTri='+datatri;
 		}
 
-		console.log(data);
 		$.ajax({
 			type: "POST",
 			url: "lib/ajax/triProduits.php",
@@ -27,8 +26,41 @@ $("#navigationProduits ul li a").on('click', function(e) {
 					}
 				}
 				if(retour.result == true) {
-					$(".displayProduits").html(retour.produits);
-					$(".displayProduits").prepend('<div class="container-fluid"><h4>'+retour.title+'</h4></div>');
+					$(".displayProduits").html('<div class="loader"></div>');
+					$(".loader").fadeOut("slow", function(){
+						$(".displayProduits").html(retour.produits);
+						$(".displayProduits").prepend('<div class="container-fluid"><h4>'+retour.title+'</h4></div>');
+					});
+				} else {
+					$(".displayProduits").html('<div class="alert alert-danger">Aucun produit ne correspond à vos critères de recherche</div>');
+				}
+			},
+			error: function(retour) {
+				console.log(retour);
+			}
+		});
+	}
+});
+
+$("#rechercheForm").on('submit', function(e) {
+	e.preventDefault();
+	var dataSearch = $(".searchText").val();
+	
+	if(dataSearch.length > 0) {
+		var data = 'optionTri=searchText&text='+encodeURIComponent(dataSearch);
+		$.ajax({
+			type: "POST",
+			url: "lib/ajax/triProduits.php",
+			data: data,
+			dataType: 'json',
+			success: function(retour) {
+				console.log(retour);
+				if(retour.result == true) {
+					$(".displayProduits").html('<div class="loader"></div>');
+					$(".loader").fadeOut("slow", function(){
+						$(".displayProduits").html(retour.produits);
+						$(".displayProduits").prepend('<div class="container-fluid"><h4>'+retour.title+'</h4></div>');
+					});
 				} else {
 					$(".displayProduits").html('<div class="alert alert-danger">Aucun produit ne correspond à vos critères de recherche</div>');
 				}

@@ -105,5 +105,30 @@ class ModelProduit extends Model {
 			return false;
 		}
 	}
+
+	public static function selectText($text) {
+		$table_name = static::$tableName;
+		$class_name = 'Model'.ucfirst(static::$object);
+		try {
+			$sql = "SELECT * from `".$table_name."` WHERE `label` LIKE :label";
+			$req_texte = Model::$pdo->prepare($sql);
+
+			$values = array(
+				'label' => '%'.$text.'%'
+			);
+
+			$req_texte->execute($values);
+			$req_texte->setFetchMode(PDO::FETCH_CLASS, $class_name);
+			$tab_t = $req_texte->fetchAll();
+			return $tab_t;
+		} catch(PDOException $e) {
+			if (Conf::getDebug()) {
+				echo $e->getMessage();
+			} else {
+				echo 'Une erreur est survenue <a href="index.php"> retour a la page d\'accueil </a>';
+			}
+			die();
+		}
+	}
 }
 ?>
