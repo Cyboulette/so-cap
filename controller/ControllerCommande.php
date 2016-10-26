@@ -15,16 +15,19 @@ class ControllerCommande {
 
    public static function read() {
       if(isset($_GET['idCommande'])) {
-         $p = ModelComande::select($_GET['idCommande']);
+         $c = ModelCommande::select($_GET['idCommande']);
       } else {
-         $p = false;
+         $c = false;
       }
+      $p = "SELECT * from produitsCommandes WHERE `idCommande ='' :".$_GET['idCommande']."";
 
-      if($p != false) {
+
+
+
+      if($c != false) {
          $pagetitle= 'So\'Cap - Affichage d\'une commande';
+         $view = 'detail';
          require File::build_path(array('view', 'view.php'));
-      } else {
-         ModelProduit::error("Cette commande n'éxiste pas");
       }
    }
 

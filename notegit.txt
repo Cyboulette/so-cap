@@ -1,0 +1,6 @@
+
+git pull
+
+git add --all
+git commit --all crt o  entrer crt x
+git push
