@@ -9,7 +9,7 @@
 		private $etatCommande;
 		private $modeLivraison;
 
-		protected static $tablename = 'livraisons';
+		protected static $tableName = 'livraisons';
 		protected static $object = 'livraison';
 		protected static $primary='idLivraison';
 
