@@ -2,7 +2,6 @@
 $idProduit = $p->get('idProduit');
 $label = strip_tags($p->get('label'));
 $categorieProduit = $p->get('categorieProduit');
-$description = strip_tags($p->get('description'));
 $prix = $p->get('prix');
 $disabledAchat = ($p->getStock() == 0 ? 'btn-default disabled' : 'btn-success');
 
@@ -48,11 +47,7 @@ $disabledAchat = ($p->getStock() == 0 ? 'btn-default disabled' : 'btn-success');
 			?>
 		</div>
 
-		<hr/>
-
 		<div class="description"><em><?=$description?></em></div>
-
-		<hr/>
 
 		<div class="details">
 			<span class="prix label label-primary">Prix : <?=$prix?> <i class="fa fa-eur" aria-hidden="true"></i></span>

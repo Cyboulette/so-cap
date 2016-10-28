@@ -74,6 +74,13 @@ class ControllerProduit {
          } else {
             $levelLabelStock = 'label-success';
          }
+         
+         if(!empty(strip_tags($p->get('description')))) {
+            $description = strip_tags($p->get('description'));
+         } else {
+            $description = 'Ce produit ne possède aucune description !';
+         }
+
          $view = 'detail';
          $pagetitle= 'So\'Cap - Affichage d\'un produit';
          require File::build_path(array('view', 'view.php'));

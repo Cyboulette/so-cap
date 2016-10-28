@@ -43,15 +43,29 @@
 			foreach ($tab_p as $p) {
 				$idProduit = $p->get('idProduit');
 				$label = strip_tags($p->get('label'));
-				$categorieProduit = $p->get('categorieProduit'); // A gérer ?
-				$description = strip_tags($p->get('description'));
+				$categorieProduit = $p->get('categorieProduit');
+				$description = (!empty(strip_tags($p->get('description'))) ? strip_tags($p->get('description')) : 'Ce produit ne possède aucune description !');
 				$prix = $p->get('prix');
 				$stock = $p->getStock();
 				$disabledAchat = ($p->getStock() == 0 ? 'btn-default disabled' : 'btn-success');
+				
+	            $imagesProduit = $p->getImages();
+	            $dataImage = '<div class="alert alert-info">Aucun visuel disponible pour ce produit</div>';
+	            $order = 0;
+	            if($imagesProduit != false) {
+	               foreach ($imagesProduit as $imageProduit) {
+	                  if($order < 1) { // Pour limiter à 1 image
+	                     if(file_exists(File::build_path(array('assets/images/produits/', $imageProduit['nomImage'])))) {
+	                        $dataImage = '<img src="assets/images/produits/'.$imageProduit['nomImage'].'" />';
+	                        $order++;
+	                     }
+	                  }
+	               }
+	            }
 				$data = '<div class="col-md-4" data-id="'.$idProduit.'">
 				<div class="produit">
 				<div class="image">
-				<img src="assets/images/no_visu.png" />
+					'.$dataImage.'
 				</div>
 
 				<div class="title">'.$label.'</div>

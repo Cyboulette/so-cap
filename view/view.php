@@ -33,9 +33,9 @@
 	        <div id="navbar" class="collapse navbar-collapse">
 	          <ul class="nav navbar-nav">
 	            <li class="logoBrand"><a href="index.php">So'CAP</a></li>
-	            <li><a href="index.php">Accueil</a></li>
-	            <li><a href="index.php?controller=produit&action=readAll">Produits</a></li>
-	            <li><a href="index.php?controller=commande&action=readAll">Commandes</a></li>
+	            <li <?php ControllerDefault::active('index'); ?>><a href="index.php">Accueil</a></li>
+	            <li <?php ControllerDefault::active('produit'); ?>><a href="index.php?controller=produit&action=readAll">Produits</a></li>
+	            <li <?php ControllerDefault::active('commande'); ?>><a href="index.php?controller=commande&action=readAll">Commandes</a></li>
 	          </ul>
 	        </div><!--/.nav-collapse -->
 	      </div>
@@ -55,5 +55,11 @@
 		<?php 
 			require File::build_path(array("assets", "js", "js.php"));
 		?>
+
+		<footer class="footer">
+			<div class="container">
+				<p class="text-muted">So'Cap 2016-2017 - Tous droits réservés.</p>
+			</div>
+		</footer>
 	</body>
 </html>

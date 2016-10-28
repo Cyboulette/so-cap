@@ -38,10 +38,10 @@
 		$idProduit = $p->get('idProduit');
 		$label = strip_tags($p->get('label'));
 		$categorieProduit = $p->get('categorieProduit'); // A gérer ?
-		$description = strip_tags($p->get('description'));
 		$prix = $p->get('prix');
 		$stock = $p->getStock();
 		$disabledAchat = ($p->getStock() == 0 ? 'btn-default disabled' : 'btn-success');
+		$description = (!empty(strip_tags($p->get('description'))) ? strip_tags($p->get('description')) : 'Ce produit ne possède aucune description !');
 	?>
 		<div class="col-md-4" data-id="<?=$idProduit?>">
 			<div class="produit">

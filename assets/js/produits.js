@@ -25,15 +25,16 @@ $("#navigationProduits ul li a").on('click', function(e) {
 						$("#navigationProduits .boutonsHaut li[data-tri='"+datatri+"']").addClass('active');
 					}
 				}
-				if(retour.result == true) {
-					$(".displayProduits").html('<div class="loader"></div>');
-					$(".loader").fadeOut("slow", function(){
+
+				$(".displayProduits").html('<div class="loader"></div>');
+				$(".loader").fadeOut("slow", function(){
+					if(retour.result == true) {
 						$(".displayProduits").html(retour.produits);
 						$(".displayProduits").prepend('<div class="container-fluid"><h4>'+retour.title+'</h4></div>');
-					});
-				} else {
-					$(".displayProduits").html('<div class="alert alert-danger">Aucun produit ne correspond à vos critères de recherche</div>');
-				}
+					} else {
+						$(".displayProduits").html('<div class="container-fluid"><div class="alert alert-danger">Aucun produit ne correspond à vos critères de recherche</div></div>');
+					}
+				});
 			},
 			error: function(retour) {
 				console.log(retour);
@@ -54,16 +55,15 @@ $("#rechercheForm").on('submit', function(e) {
 			data: data,
 			dataType: 'json',
 			success: function(retour) {
-				console.log(retour);
-				if(retour.result == true) {
-					$(".displayProduits").html('<div class="loader"></div>');
-					$(".loader").fadeOut("slow", function(){
+				$(".displayProduits").html('<div class="loader"></div>');
+				$(".loader").fadeOut("slow", function(){
+					if(retour.result == true) {
 						$(".displayProduits").html(retour.produits);
 						$(".displayProduits").prepend('<div class="container-fluid"><h4>'+retour.title+'</h4></div>');
-					});
-				} else {
-					$(".displayProduits").html('<div class="alert alert-danger">Aucun produit ne correspond à vos critères de recherche</div>');
-				}
+					} else {
+						$(".displayProduits").html('<div class="container-fluid"><div class="alert alert-danger">Aucun produit ne correspond à vos critères de recherche</div></div>');
+					}
+				});
 			},
 			error: function(retour) {
 				console.log(retour);

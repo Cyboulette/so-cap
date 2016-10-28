@@ -16,10 +16,12 @@ class ControllerDefault {
 		require File::build_path(array('view', 'view.php'));
 	}
 
-	public static function active($url) {
-		$urlToExplode = $_SERVER['REQUEST_URI'];
-		$urlExploded = explode("/", $_SERVER['REQUEST_URI']);
-		if($urlExploded[2] == $url) {
+	public static function active($currentController) {
+		$queryString = $_SERVER['QUERY_STRING'];
+		if(strpos($queryString, 'controller='.$currentController) !== false) {
+			echo 'class="active"';
+		}
+		if($currentController == "index" && empty($queryString)) {
 			echo 'class="active"';
 		}
 	}

@@ -1,6 +1,10 @@
+/* Contenu principal */
+
 .page {
 	padding-top: 90px;
 }
+
+/* Menu du haut */
 
 .menuHaut {
     min-height: 70px;
@@ -16,6 +20,10 @@
     font-size: 1.5em;
 }
 
+.menuHaut .navbar-nav > .active > a {
+	background-color: #ad762c;
+}
+
 .menuHaut .navbar-brand {
     float: left;
     height: 70px;
@@ -24,6 +32,8 @@
     line-height: 40px;
     color: white;
 }
+
+/* Responsive du menu */
 
 @media (max-width: 767px) {
 	.menuHaut .navbar-nav > li > a {
@@ -54,7 +64,7 @@
 	border-color: black;
 }
 
-.menuHaut li:not(.logoBrand):hover {
+.menuHaut li:not(.logoBrand):hover, .menuHaut .navbar-nav > .active > a:hover, .menuHaut .navbar-nav > .active > a:focus {
 	background: rgb(222, 171, 101);
 }
 
@@ -63,6 +73,8 @@
 	color: #755324;
 	font-weight: bolder;
 }
+
+/* Gestion des contenus divers */
 
 section {
 	text-align: center;
@@ -94,6 +106,8 @@ section {
 	margin-bottom: 10px;
 }
 
+/* Correction d'un bug dans bootstrap */
+
 .row [class*="col-"]{
   margin-bottom: -99999px;
   padding-bottom: 99999px;
@@ -102,6 +116,8 @@ section {
 .row{
   overflow: hidden; 
 }
+
+/* Page d'accueil */
 
 .last-products {
 	background: url('../images/last-products-bg.png');
@@ -118,6 +134,8 @@ section {
 i.bigCoffee {
 	font-size: 8em;
 }
+
+/* Responsive */
 
 @media (max-width: 1200px) {
 	.col-lg-3 {
