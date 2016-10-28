@@ -4,14 +4,13 @@ $label = strip_tags($p->get('label'));
 $categorieProduit = $p->get('categorieProduit');
 $description = strip_tags($p->get('description'));
 $prix = $p->get('prix');
-$stock = $p->getStock();
 $disabledAchat = ($p->getStock() == 0 ? 'btn-default disabled' : 'btn-success');
 
 ?>
 <h1>Détail du produit <u><?=$label?></u> :</h1>
 
 <div class="row">
-	<div class="produit">
+	<div class="produit noHover">
 		<div class="image">
 			<?php 
 				if(empty($dataImages)) {
@@ -49,14 +48,16 @@ $disabledAchat = ($p->getStock() == 0 ? 'btn-default disabled' : 'btn-success');
 			?>
 		</div>
 
+		<hr/>
 
-		<p class="description">Description : <?=$description?></p>
+		<div class="description"><em><?=$description?></em></div>
 
 		<hr/>
 
 		<div class="details">
-			<span class="prix">Au prix de <?=$prix?> €</span>
-			<span class="stock">Reste : <b><?=$stock?></b> produit(s)</span>
+			<span class="prix label label-primary">Prix : <?=$prix?> <i class="fa fa-eur" aria-hidden="true"></i></span>
+				<br/>
+			<span class="stock label <?=$levelLabelStock?>">Reste : <b><?=$stock?></b> produit(s)</span>
 		</div>
 
 		<div class="buttons">

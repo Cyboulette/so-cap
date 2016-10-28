@@ -46,7 +46,13 @@
 		<div class="col-md-4" data-id="<?=$idProduit?>">
 			<div class="produit">
 				<div class="image">
-					<img src="assets/images/no_visu.png" />
+					<?php 
+						if(!empty($dataImages[$idProduit])) {
+							echo '<img src="'.$dataImages[$idProduit][0]['url'].'" />';
+						} else {
+							echo '<div class="alert alert-info">Aucun visuel disponible pour ce produit</div>';
+						}
+					?>
 				</div>
 
 				<div class="title"><?=$label?></div>

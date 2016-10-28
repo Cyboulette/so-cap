@@ -18,6 +18,24 @@ class ControllerProduit {
       }
 
       if(!empty($tab_p)) {
+         $dataImages = array();
+         $order = 0;
+         foreach($tab_p as $p) {
+            $imagesProduit = $p->getImages();
+            if($imagesProduit != false) {
+               foreach ($imagesProduit as $imageProduit) {
+                  if($order < 1) {
+                     if(file_exists(File::build_path(array('assets/images/produits/', $imageProduit['nomImage'])))) {
+                        $dataImages[$imageProduit['idProduit']][$order] = array(
+                           'url' => 'assets/images/produits/'.$imageProduit['nomImage']
+                        );
+                        $order++;
+                     }
+                  }
+               }
+            }
+            $order = 0;
+         }
          require File::build_path(array('view', 'view.php'));
       } else {
          ModelProduit::error("Nous ne possédons aucun produit");
@@ -45,6 +63,16 @@ class ControllerProduit {
                   $order++;
                }
             }
+         }
+         $stock = $p->getStock();
+         if ($stock == 1) {
+            $levelLabelStock = 'label-danger';
+         } elseif($stock == 0) {
+            $levelLabelStock = 'label-default';
+         } elseif($stock <= 10) {
+            $levelLabelStock = 'label-info';
+         } else {
+            $levelLabelStock = 'label-success';
          }
          $view = 'detail';
          $pagetitle= 'So\'Cap - Affichage d\'un produit';

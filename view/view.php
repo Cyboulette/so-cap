@@ -19,7 +19,7 @@
 		<![endif]-->
 	</head>
 	<body>
-	    <nav class="navbar navbar-inverse navbar-fixed-top">
+	    <nav class="navbar navbar-inverse navbar-fixed-top menuHaut">
 	      <div class="container">
 	        <div class="navbar-header">
 	          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -28,35 +28,29 @@
 	            <span class="icon-bar"></span>
 	            <span class="icon-bar"></span>
 	          </button>
-	          <a class="navbar-brand" href="index.php">So'Cap</a>
+	          <a class="navbar-brand visible-xs" href="index.php">So'Cap</a>
 	        </div>
 	        <div id="navbar" class="collapse navbar-collapse">
 	          <ul class="nav navbar-nav">
-	            <li <?php ControllerDefault::active('index.php') ?>><a href="index.php">Accueil</a></li>
-	            <li <?php ControllerDefault::active('index.php?controller=produit&action=readAll') ?>><a href="index.php?controller=produit&action=readAll">Produits</a></li>
+	            <li class="logoBrand"><a href="index.php">So'CAP</a></li>
+	            <li><a href="index.php">Accueil</a></li>
+	            <li><a href="index.php?controller=produit&action=readAll">Produits</a></li>
 	            <li><a href="index.php?controller=commande&action=readAll">Commandes</a></li>
 	          </ul>
 	        </div><!--/.nav-collapse -->
 	      </div>
 	    </nav>
 
-	    <div class="container-fluid">
-	    	<div class="row">
-				<div class="col-sm-3 col-md-2 sidebar">
-					<ul class="nav nav-sidebar">
-						<li class="active"><a href="#">Test <span class="sr-only">(current)</span></a></li>
-						<li><a href="#">Test #2</a></li>
-					</ul>
-				</div>
-
-				<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-					<?php
-						$filepath = File::build_path(array("view", static::$object, "$view.php"));
-						require $filepath;
-					?>
-				</div>
-	    	</div>
-		</div>
+		<?php
+			if($view != 'index') {
+				echo '<div class="container page">';
+			}
+			$filepath = File::build_path(array("view", static::$object, "$view.php"));
+			require $filepath;
+			if($view != 'index') {
+				echo '</div>';
+			}
+		?>
 
 		<?php 
 			require File::build_path(array("assets", "js", "js.php"));

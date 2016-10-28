@@ -1,6 +1,6 @@
-body {
+/*body {
 	padding-top: 80px;
-}
+}*/
 
 .produit {
 	border: 1px solid #c57a09;
@@ -9,7 +9,7 @@ body {
 	text-align: center;
 }
 
-.produit:hover {
+.produit:not(.noHover):hover {
 	background: #222;
 	color: white;
 }
@@ -19,7 +19,7 @@ body {
 }
 
 .produit span {
-	display: block;
+	/*display: block;*/
 }
 
 .h1, .h2, .h3, h1, h2, h3 {
@@ -27,22 +27,51 @@ body {
 	margin-top: 0px;
 }
 
-
-
 .sidebar {
 	display: none;
 }
 
+.details {
+	margin-top: -15px;
+	margin-bottom: 5px;
+}
+
+.carousel-control.left, .carousel-control.right {
+	background: none;
+	color: #428bca;
+}
+
+.carousel-control {
+	width: auto;
+}
+
+.carousel-control.left {
+	left: 10%;
+}
+
+.carousel-control.right {
+	right: 10%;
+}
+
+.carousel-indicators .active {
+	background-color: #428bca;
+}
+
+.carousel-indicators li {
+	border: 1px solid #428bca;
+}
 
 .nav-sidebar {
 	margin-right: -21px; /* 20px de padding + 1px de bordure */
 	margin-bottom: 20px;
 	margin-left: -20px;
 }
+
 .nav-sidebar > li > a {
 	padding-right: 20px;
 	padding-left: 20px;
 }
+
 .nav-sidebar > .active > a,
 .nav-sidebar > .active > a:hover,
 .nav-sidebar > .active > a:focus {
@@ -58,6 +87,11 @@ body {
 	height: 100px;
 	-webkit-animation: spin 2s linear infinite;
 	animation: spin 2s linear infinite;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.carousel-inner>.item>img {
 	margin-left: auto;
 	margin-right: auto;
 }
