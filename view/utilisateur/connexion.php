@@ -1,15 +1,22 @@
 <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+  <?php 
+    if(isset($displayError) && !empty($displayError)) {
+      echo '<div class="alert alert-danger">'.$displayError.'</div>';
+    }
+    $email = (isset($_POST['email']) ? strip_tags($_POST['email']) : '');
+    $password = (isset($_POST['password']) ? $_POST['password'] : '');
+  ?>
   <form role="form" action="index.php?controller=utilisateur&action=connected" method="POST">
     <fieldset>
       <h2>Se connecter</h2>
       <hr class="colorgraph">
 
       <div class="form-group">
-        <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Adresse e-mail">
+        <input type="email" name="email" id="email" value="<?=$email?>" class="form-control input-lg" placeholder="Adresse e-mail">
       </div>
 
       <div class="form-group">
-        <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Mot de passe">
+        <input type="password" name="password" id="password" value="<?=$password?>" class="form-control input-lg" placeholder="Mot de passe">
       </div>
 
       <hr class="colorgraph">
