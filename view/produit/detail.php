@@ -4,6 +4,7 @@ $label = strip_tags($p->get('label'));
 $categorieProduit = $p->get('categorieProduit');
 $prix = $p->get('prix');
 $disabledAchat = ($p->getStock() == 0 ? 'btn-default disabled' : 'btn-success');
+$stockMin = ($p->getStock() == 0 ? '0' : '1');
 
 ?>
 <h1>Détail du produit <u><?=$label?></u> :</h1>
@@ -56,8 +57,22 @@ $disabledAchat = ($p->getStock() == 0 ? 'btn-default disabled' : 'btn-success');
 		</div>
 
 		<div class="buttons">
-			<a href="index.php?controller=produit&action=addCart&idProduit=<?=$idProduit?>" class="btn <?=$disabledAchat?> btn-xs"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Ajouter au panier</a>
+			<div class="input-group quantity">
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default btn-sm btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">
+						<span class="glyphicon glyphicon-minus"></span>
+					</button>
+				</div>
+				<input type="text" name="quant[1]" class="form-control input-sm input-number" readonly="readonly" value="<?=$stockMin?>" min="0" max="<?=$stock?>">
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default btn-sm btn-number" data-type="plus" data-field="quant[1]">
+						<span class="glyphicon glyphicon-plus"></span>
+					</button>
+					<a href="index.php?controller=produit&action=addCart&idProduit=<?=$idProduit?>" class="btn <?=$disabledAchat?> btn-sm"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Ajouter au panier</a>
+				</div>
+			</div>
 		</div>
+
 	</div>
 	<br/>
 	<div>

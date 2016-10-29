@@ -1,7 +1,7 @@
 <div class="container page">
 	<section class="first-section">
 		<h1>Achetez toutes vos capsules de café en ligne !</h1>
-		<div class="row">
+		<div class="row boxAccueil">
 			<div class="col-lg-3 col-lg-offset-1 box">
 				<div class="icon"><i class="fa fa-users" aria-hidden="true"></i></div>
 				<div class="title">Un support de qualité !</div>

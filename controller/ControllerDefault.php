@@ -16,13 +16,19 @@ class ControllerDefault {
 		require File::build_path(array('view', 'view.php'));
 	}
 
-	public static function active($currentController) {
+	public static function active($currentController, $currentAction) {
 		$queryString = $_SERVER['QUERY_STRING'];
-		if(strpos($queryString, 'controller='.$currentController) !== false) {
-			echo 'class="active"';
-		}
-		if($currentController == "index" && empty($queryString)) {
-			echo 'class="active"';
+		if(!empty($currentAction)) {
+			if(strpos($queryString, 'controller='.$currentController."&action=".$currentAction) !== false) {
+				echo 'class="active"';
+			}
+		} else {
+			if(strpos($queryString, 'controller='.$currentController) !== false) {
+				echo 'class="active"';
+			}
+			if($currentController == "index" && empty($queryString)) {
+				echo 'class="active"';
+			}
 		}
 	}
 }

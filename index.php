@@ -1,4 +1,5 @@
 <?php 
+	session_start(); // Session ici, car page parente de TOUTES
 	$DS = DIRECTORY_SEPARATOR;
 	$ROOT_FOLDER = __DIR__.$DS;
 	require_once $ROOT_FOLDER.'lib/File.php';

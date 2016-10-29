@@ -99,6 +99,19 @@
 			}
 		}
 
+		// Factoriser le get et le set dans Model.php
+		// On va utiliser un getter générique et un setter générique, ce sera plus rapide et plus pratique
+		public function get($nom_attribut) {
+		    if (property_exists($this, $nom_attribut))
+		        return $this->$nom_attribut;
+		    return false;
+		}
+
+		public function set($nom_attribut, $valeur) {
+		    if (property_exists($this, $nom_attribut))
+		        $this->$nom_attribut = $valeur;
+		    return false;
+		}
 
 		//Gestion des erreurs pour tous les modèles !!
 		public static function error($error) {

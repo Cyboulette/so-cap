@@ -50,11 +50,21 @@ body {
 }
 
 .produit img {
-	height: 100px;
+	height: 150px;
 }
 
 .produit .details {
 	margin-bottom: 5px;
+}
+
+.input-group .input-number, .quantity {
+	width: 50px;
+	text-align: center;
+}
+
+.quantity {
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .produit .description {
@@ -131,6 +141,7 @@ body {
 .carousel-inner>.item>img {
 	margin-left: auto;
 	margin-right: auto;
+	height : 250px;
 }
 
 /* Gestion de l'icône de chargement */
