@@ -118,6 +118,7 @@
 			$displayError = $error;
 			$view = 'error';
 			$pagetitle= 'So\'Cap - Erreur';
+			$powerNeeded = true;
 			require File::build_path(array('view', 'view.php'));
 		}
 	}

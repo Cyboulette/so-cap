@@ -1,5 +1,6 @@
 <?php
 require_once File::build_path(array('model', 'ModelCommande.php'));
+require_once File::build_path(array('controller', 'ControllerUtilisateur.php'));
 
 class ControllerCommande {
 
@@ -9,6 +10,7 @@ class ControllerCommande {
 		$tab_c = ModelCommande::selectAll();
       $view = 'list';
 		$pagetitle= 'So\'Cap - Liste des commandes';
+      $powerNeeded = ControllerUtilisateur::isConnected();
       require File::build_path(array('view', 'view.php'));
       
 	}
@@ -23,6 +25,7 @@ class ControllerCommande {
          $pagetitle= 'So\'Cap - Affichage d\'une commande';
          $view = 'detail';
          $produitsCommandes = $c->getProduits();
+         $powerNeeded = ControllerUtilisateur::isConnected();
          require File::build_path(array('view', 'view.php'));
       }
    }

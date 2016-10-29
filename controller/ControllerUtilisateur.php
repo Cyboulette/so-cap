@@ -8,6 +8,7 @@ class ControllerUtilisateur {
    public static function connect() {
       $view = 'connexion';
       $pagetitle = 'So\'Cap - Se connecter';
+      $powerNeeded = !self::isConnected();
       require File::build_path(array('view', 'view.php'));
    }
 
@@ -27,6 +28,7 @@ class ControllerUtilisateur {
                      $message = 'Connexion réalisée avec succès !';
                      $view = 'success_action';
                      $pagetitle = 'So\'Cap - Connexion réussie';
+                     $powerNeeded = self::isConnected();
                      require File::build_path(array('view', 'view.php'));
                   } else {
                      ModelUtilisateur::error('Le mot de passe est incorrect');
@@ -53,6 +55,7 @@ class ControllerUtilisateur {
          $message = 'Déconnexion réalisée avec succès !';
          $view = 'success_action';
          $pagetitle = 'So\'Cap - Déconnexion';
+         $powerNeeded = !self::isConnected();
          require File::build_path(array('view', 'view.php'));
       } else {
          ModelUtilisateur::error('Vous n\'êtes pas connecté, impossible de vous déconnecter !');

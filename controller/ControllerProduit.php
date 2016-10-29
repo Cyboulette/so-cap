@@ -1,6 +1,7 @@
 <?php
 require_once File::build_path(array('model', 'ModelProduit.php'));
 require_once File::build_path(array('model', 'ModelCategorie.php'));
+require_once File::build_path(array('controller', 'ControllerUtilisateur.php'));
 
 class ControllerProduit {
 
@@ -36,6 +37,7 @@ class ControllerProduit {
             }
             $order = 0;
          }
+         $powerNeeded = true;
          require File::build_path(array('view', 'view.php'));
       } else {
          ModelProduit::error("Nous ne possédons aucun produit");
@@ -83,6 +85,7 @@ class ControllerProduit {
 
          $view = 'detail';
          $pagetitle= 'So\'Cap - Affichage d\'un produit';
+         $powerNeeded = true;
          require File::build_path(array('view', 'view.php'));
       } else {
          ModelProduit::error("Ce produit n'est pas disponible");
@@ -96,6 +99,7 @@ class ControllerProduit {
             if($produit->getStock() != 0) {
                $view = 'addCart';
                $pagetitle= 'So\'Cap - Achat d\'un produit';
+               $powerNeeded = ControllerUtilisateur::isConnected();
                require File::build_path(array('view', 'view.php'));               
             } else {
                ModelProduit::error("Impossible d'acheter ce produit, nous ne l'avons plus en stock");

@@ -35,13 +35,13 @@
 	            <li class="logoBrand"><a href="index.php">So'CAP</a></li>
 	            <li <?php ControllerDefault::active('index', ''); ?>><a href="index.php">Accueil</a></li>
 	            <li <?php ControllerDefault::active('produit', ''); ?>><a href="index.php?controller=produit&action=readAll">Produits</a></li>
-	            <li <?php ControllerDefault::active('commande', ''); ?>><a href="index.php?controller=commande&action=readAll">Commandes</a></li>
 	            <?php 
 	            	if(!isset($_SESSION['login'])) {
 	            ?>
 	            	<li <?php ControllerDefault::active('utilisateur', 'connect'); ?>><a href="index.php?controller=utilisateur&action=connect">Connexion</a></li>
 	            	<li <?php ControllerDefault::active('utilisateur', 'register'); ?>><a href="index.php?controller=utilisateur&action=register">Inscription</a></li>
 	            <?php } else { ?>
+	            	<li <?php ControllerDefault::active('commande', ''); ?>><a href="index.php?controller=commande&action=readAll">Vos commandes</a></li>
 	            	<li <?php ControllerDefault::active('utilisateur', 'profil'); ?>><a href="index.php?controller=utilisateur&action=profil">Mon Profil</a></li>
 	            	<li <?php ControllerDefault::active('utilisateur', 'disconnect'); ?>><a href="index.php?controller=utilisateur&action=disconnect">Déconnexion</a></li>
 	            <?php } ?>
@@ -51,13 +51,17 @@
 	    </nav>
 
 		<?php
-			if($view != 'index') {
-				echo '<div class="container page">';
-			}
-			$filepath = File::build_path(array("view", static::$object, "$view.php"));
-			require $filepath;
-			if($view != 'index') {
-				echo '</div>';
+			if(isset($powerNeeded) && $powerNeeded == true) {
+	 			if($view != 'index') {
+					echo '<div class="container page">';
+				}
+					$filepath = File::build_path(array("view", static::$object, "$view.php"));
+					require $filepath;
+				if($view != 'index') {
+					echo '</div>';
+				}
+			} else {
+				echo '<div class="container page"><div class="alert alert-danger">Vous ne possédez pas les droits pour accéder à cette page</div></div>';
 			}
 		?>
 

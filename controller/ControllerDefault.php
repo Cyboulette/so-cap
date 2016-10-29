@@ -1,4 +1,6 @@
 <?php
+require_once File::build_path(array('config', 'Conf.php'));
+
 class ControllerDefault {
 
 	protected static $object = 'default';
@@ -6,6 +8,7 @@ class ControllerDefault {
 	public static function index() {
 		$view = 'index';
 		$pagetitle = 'So\'Cap';
+		$powerNeeded = true;
 		require File::build_path(array('view', 'view.php'));
 	}
 
@@ -13,6 +16,7 @@ class ControllerDefault {
 		$displayError = $error;
 		$view = 'error';
 		$pagetitle= 'So\'Cap - Erreur';
+		$powerNeeded = true;
 		require File::build_path(array('view', 'view.php'));
 	}
 

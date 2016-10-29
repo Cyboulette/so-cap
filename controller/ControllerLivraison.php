@@ -1,5 +1,6 @@
 <?php
 require_once File::build_path(array('model', 'ModelLivraison.php'));
+require_once File::build_path(array('controller', 'ControllerUtilisateur.php'));
 
 class ControllerLivraison {
 
