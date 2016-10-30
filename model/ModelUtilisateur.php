@@ -80,6 +80,54 @@ class ModelUtilisateur extends Model {
 	    }  		
   	}
 
+  	public function getPower() {
+	    try {
+	      $sql = 'SELECT * FROM `rangs` WHERE idRang = :idRang';
+	      $getRang = Model::$pdo->prepare($sql);
+
+	      $values = array(
+	      	'idRang' => $this->rang
+	      );
+
+	      $getRang->execute($values);
+	      $results_rang = $getRang->fetch();
+	      if($results_rang != false) {
+		      if(ControllerUtilisateur::isConnected()) {
+		      	return $results_rang['power'];
+		      } else {
+		         return 0;
+		      }
+	      }
+	    } catch(PDOException $e) {
+	        if (Conf::getDebug()) {
+	            echo $e->getMessage();
+	        }
+	        return false;
+	        die();
+	    }
+  	}
+
+  	public static function getNombreActifsAndValid() {
+	    try {
+	      $sql = 'SELECT COUNT(*) FROM `'.self::$tableName.'` WHERE rang > :rang AND nonce IS NULL';
+	      $getNombre = Model::$pdo->prepare($sql);
+
+	      $values = array(
+	      	'rang' => 1
+	      );
+
+	      $getNombre->execute($values);
+	      $result_nombre = $getNombre->fetch();
+	      return $result_nombre[0];
+	    } catch(PDOException $e) {
+	        if (Conf::getDebug()) {
+	            echo $e->getMessage();
+	        }
+	        return false;
+	        die();
+	    }  		
+  	}
+
   	public static function errorForm($error, $view, $titlePage) {
 		$displayError = $error;
 		$view = $view;

@@ -36,14 +36,21 @@
 	            <li <?php ControllerDefault::active('index', ''); ?>><a href="index.php">Accueil</a></li>
 	            <li <?php ControllerDefault::active('produit', ''); ?>><a href="index.php?controller=produit&action=readAll">Produits</a></li>
 	            <?php 
-	            	if(!isset($_SESSION['login'])) {
+					new ControllerUtilisateur();
+					if(!ControllerUtilisateur::isConnected()) {
+						$currentUser = null;
 	            ?>
 	            	<li <?php ControllerDefault::active('utilisateur', 'connect'); ?>><a href="index.php?controller=utilisateur&action=connect">Connexion</a></li>
 	            	<li <?php ControllerDefault::active('utilisateur', 'register'); ?>><a href="index.php?controller=utilisateur&action=register">Inscription</a></li>
-	            <?php } else { ?>
+	            <?php } else { 
+	            	$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+	            ?>
 	            	<li <?php ControllerDefault::active('commande', ''); ?>><a href="index.php?controller=commande&action=readAll">Vos commandes</a></li>
 	            	<li <?php ControllerDefault::active('utilisateur', 'profil'); ?>><a href="index.php?controller=utilisateur&action=profil">Mon Profil</a></li>
 	            	<li <?php ControllerDefault::active('utilisateur', 'disconnect'); ?>><a href="index.php?controller=utilisateur&action=disconnect">Déconnexion</a></li>
+	            	<?php if($currentUser->getPower() == Conf::$power['admin']) { ?>
+	            		<li <?php ControllerDefault::active('admin', ''); ?>><a href="index.php?controller=admin&action=index">Administration</a></li>
+	            	<?php } ?>
 	            <?php } ?>
 	          </ul>
 	        </div><!--/.nav-collapse -->

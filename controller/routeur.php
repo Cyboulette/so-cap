@@ -1,5 +1,13 @@
 <?php
-	require_once File::build_path(array('controller', 'ControllerDefault.php'));
+	require_once File::build_path(array('controller', 'ControllerDefault.php')); // On charge le controller par défaut
+
+	@session_start(); // On démarre la session
+
+	function __autoload($controller_name) {
+
+		require_once File::build_path(array('controller', $controller_name.'.php')); // On inclut les fichiers par auto_load
+
+	}
 
 	if(isset($_GET['controller']) && !empty(($_GET['controller']))) {
 		$controller = $_GET['controller'];

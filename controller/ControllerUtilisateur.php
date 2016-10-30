@@ -173,5 +173,19 @@ class ControllerUtilisateur {
          return false;
       }
    }
+
+   public static function checkRang($rang) {
+      if(self::isConnected()) {
+         $userConnected = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser']);
+         if($userConnected != false) {
+            $user = $userConnected[0];
+            return $user->getInfosRang();
+         } else {
+            return 0;
+         }
+      } else {
+         return 0;
+      }
+   }
 }
 ?>

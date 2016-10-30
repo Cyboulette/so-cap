@@ -169,6 +169,32 @@ body {
 	100% { transform: rotate(360deg); }
 }
 
+/* Admin */
+
+.stats {
+	text-align: center;
+	border: 1px solid #e7e7e7;
+	background-color: #f8f8f8;
+	padding: 15px;
+	border-radius: 5px;
+	margin: 20px;
+}
+
+.stats .icon {
+	font-size: 2em;
+}
+
+.listProduitsTable td, tr, th {
+	text-align: center;
+}
+
+.info {
+	display: none;
+	position: absolute;
+	top: 90px;
+	right: 10px;
+}
+
 /* Responsive */
 
 @media (min-width: 768px) {

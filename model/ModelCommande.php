@@ -51,5 +51,26 @@ class ModelCommande extends Model {
 			return false;
 		}
 	}
+
+  	public static function getTotalMontant() {
+	    try {
+	      $sql = 'SELECT SUM(`prixTotal`) FROM `'.self::$tableName.'`';
+	      $getNombre = Model::$pdo->prepare($sql);
+
+	      $values = array(
+	      	'rang' => 1
+	      );
+
+	      $getNombre->execute($values);
+	      $result_nombre = $getNombre->fetch();
+	      return $result_nombre[0];
+	    } catch(PDOException $e) {
+	        if (Conf::getDebug()) {
+	            echo $e->getMessage();
+	        }
+	        return false;
+	        die();
+	    }  		
+  	}
 }
 ?>

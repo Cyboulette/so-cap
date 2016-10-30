@@ -93,6 +93,25 @@ class ModelProduit extends Model {
 		}
 	}
 
+	public function updateFavori($newFavori) {
+		try {
+			$sql = 'UPDATE `'.static::$tableName.'` SET favorited = :favorited WHERE idProduit = :idProduit';
+			$updateFavori = Model::$pdo->prepare($sql);
+			$data = array(
+				'favorited' => $newFavori,
+				'idProduit' => $this->idProduit
+			);
+			$updateFavori->execute($data);
+			return true;
+		} catch(PDOException $e) {
+			if(Conf::getDebug()) {
+				echo $e->getMessage();
+			}
+			return false;
+			die();
+		}
+	}
+
 	public static function selectText($text) {
 		$table_name = static::$tableName;
 		$class_name = 'Model'.ucfirst(static::$object);
