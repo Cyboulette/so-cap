@@ -5,7 +5,7 @@
 
 	<div class="loader"></div>
 	<br/>
-	<div align="center"><em>Redirection en cours</em></div>
+	<div class="text-center"><em>Redirection en cours</em></div>
 	
 	<meta http-equiv="refresh" content="1; url=index.php" />
 </div>

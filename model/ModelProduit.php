@@ -93,6 +93,47 @@ class ModelProduit extends Model {
 		}
 	}
 
+	public function updateStock($newStock) {
+		try {
+
+			$sql = "SELECT idProduit FROM `stocks` WHERE `idProduit` = :idProduit";
+			$req_stocks = Model::$pdo->prepare($sql);
+
+			$values = array(
+				'idProduit' => $this->idProduit
+			);
+
+			$req_stocks->execute($values);
+			$verifyStock = $req_stocks->fetch();
+
+			if(empty($verifyStock)) {
+				$sql = 'INSERT INTO `stocks` (idProduit, stockRestant) VALUES (:idProduit, :stockRestant)';
+				$createStock = Model::$pdo->prepare($sql);
+				$values = array(
+					'idProduit' => $this->idProduit,
+					'stockRestant' => $newStock
+				);
+				$createStock->execute($values);
+				return true;
+			} else {
+				$sql = 'UPDATE `stocks` SET stockRestant = :stockRestant WHERE idProduit = :idProduit';
+				$updateStock = Model::$pdo->prepare($sql);
+				$data = array(
+					'stockRestant' => $newStock,
+					'idProduit' => $this->idProduit
+				);
+				$updateStock->execute($data);
+				return true;
+			}
+		} catch(PDOException $e) {
+			if(Conf::getDebug()) {
+				echo $e->getMessage();
+			}
+			return false;
+			die();
+		}
+	}
+
 	public function updateFavori($newFavori) {
 		try {
 			$sql = 'UPDATE `'.static::$tableName.'` SET favorited = :favorited WHERE idProduit = :idProduit';
