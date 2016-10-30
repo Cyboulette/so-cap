@@ -188,6 +188,10 @@ body {
 	text-align: center;
 }
 
+.listProduitsTable .stock btn {
+	float: right;
+}
+
 .info {
 	display: none;
 	position: absolute;

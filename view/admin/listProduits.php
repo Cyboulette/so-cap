@@ -4,12 +4,14 @@
 
 <div class="container-fluid">
 	<div class="info"></div>
+	<div class="alert alert-info">Un produit en <b>favori</b> apparaîtra dans l'onglet "Notre sélection" des produits</div>
 	<div class="row">
+		<div class="table-responsive">
 		<table class="table table-hover listProduitsTable">
 		   <thead>
 		       <tr>
 		           <th>Produit n°</th>
-		           <th>Label</th>
+		           <th>Nom</th>
 		           <th>Catégorie</th>
 		           <th>Prix</th>
 		           <th>Favori</th>
@@ -37,10 +39,11 @@
 		           <td><?=$categorieDetails->get('label')?></td>
 		           <td><?=$prix?> €</td>
 		           <td><btn class="btn btn-xs btn-primary favori" data-produit="<?=$idProduit?>" data-favori="<?=$isFavori?>"><?=$favori?></btn></td>
-		           <td><?=$stock?></td>
+		           <td class="stock"><?=$stock?></span> <btn class="btn btn-xs btn-warning stock" data-produit="<?=$idProduit?>"><i class="fa fa-pencil" aria-hidden="true"></i></btn></td>
 		       </tr>
 			<?php } ?>
 			</tbody>
 		</table>
+		</div>
 	</div>
 </div>

@@ -1,3 +1,16 @@
+$(function(){
+	$(".listProduitsTable").tablesorter({
+		headers: {
+			4: {
+				sorter: false
+			},
+			6: {
+				sorter: false
+			}
+		}
+	});
+});
+
 $(".favori").on('click', function(e) {
 	e.preventDefault();
 	var dataFavori = $(this).attr('data-favori');
@@ -29,4 +42,8 @@ $(".favori").on('click', function(e) {
 			console.log(retour);
 		}
 	});
+});
+
+$(".stock").on('click', function(e) {
+
 });
