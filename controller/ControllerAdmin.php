@@ -62,6 +62,79 @@ class ControllerAdmin {
 							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
 						}
 						break;
+					case 'updateProduit':
+						if(isset($_POST['idProduit'],$_POST['label'],$_POST['categorie'],$_POST['prix'])) {
+							$idProduit = strip_tags($_POST['idProduit']);
+							$produit = ModelProduit::select($idProduit);
+							if($produit != false) {
+								$label = strip_tags($_POST['label']);
+								if(!empty($label) && !ctype_space($label)) {
+									$checkCategorie = ModelCategorie::select($_POST['categorie']);
+									if($checkCategorie != false) {
+										$idCategorie = $checkCategorie->get('idCategorie');
+										$prix = strip_tags($_POST['prix']);
+										if(is_numeric($prix)) {
+											if($prix >= 0) {
+												if(isset($_POST['description'])) {
+													$description = strip_tags($_POST['description']);
+												} else {
+													$description = NULL;
+												}
+												
+												$data = array(
+													'label' => $label,
+													'categorieProduit' => $idCategorie,
+													'description' => $description,
+													'prix' => $prix,
+												);
+
+												$checkUpdateProduit = $produit->update($data);
+												if($checkUpdateProduit) {
+													$notif = '<div class="alert alert-success">Le produit a bien été mis à jour !</div>';
+												} else {
+													$notif = '<div class="alert alert-danger">Impossible de mettre à jour ce produit !</div>';
+												}
+											} else {
+												$notif = '<div class="alert alert-danger">Le prix du produit doit être >= 0 !</div>';
+											}
+										} else {
+											$notif = '<div class="alert alert-danger">Vous devez saisir un prix correct !</div>';
+										}
+									} else {
+										$notif = '<div class="alert alert-danger">La catégorie sélectionnée n\'existe pas !</div>';
+									}
+								} else {
+									$notif = '<div class="alert alert-danger">Le nom du produit ne peut être vide !</div>';
+								}
+							} else {
+								$notif = '<div class="alert alert-danger">Le produit demandé n\'existe pas !</div>';
+							}
+						} else {
+							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
+						}
+					case 'deleteProduit':
+						if(isset($_POST['idProduit'],$_POST['confirm'])) {
+							$idProduit = strip_tags($_POST['idProduit']);
+							$produit = ModelProduit::select($idProduit);
+							if($produit != false) {
+								$confirm = strip_tags($_POST['confirm']);
+								if($confirm == true) {
+									$checkDeleteProduit = ModelProduit::delete($produit->get('idProduit'));
+									if($checkDeleteProduit) {
+										$notif = '<div class="alert alert-success">Le produit a bien été supprimé !</div>';
+									} else {
+										$notif = '<div class="alert alert-danger">Impossible de supprimer ce produit !</div>';
+									}
+								} else {
+									$notif = '<div class="alert alert-danger">Vous devez confirmer la suppression !</div>';
+								}
+							} else {
+								$notif = '<div class="alert alert-danger">Le produit demandé n\'existe pas !</div>';
+							}
+						} else {
+							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
+						}
+						break;
 					default:
 						break;
 				}

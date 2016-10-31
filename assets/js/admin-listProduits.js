@@ -44,18 +44,36 @@ $(".favori").on('click', function(e) {
 	});
 });
 
-$(".stockBtn").on("click", function(e){
+$(".stockBtn, .editBtn, .deleteBtn").on("click", function(e){
 	e.preventDefault();
-	$('#stockProduit').modal('toggle');
-	var idProduit = $(this).attr('data-produit');
+	var action = $(this).attr('data-action');
 
-	$.ajax({
-		type: "POST",
-		url: "lib/ajax/admin-getStockProduit.php",
-		data: 'idProduit='+idProduit,
-		dataType: 'json',
-		success: function(retour) {
-			$(".stock-form-content").html(retour.message);
+	if(action != undefined) {
+		var idProduit = $(this).attr('data-produit');
+		if(action == "stockForm") {
+			var urlToPost  = "lib/ajax/admin-getStockProduit.php";
+			var titleModal = "Modifier le stock d'un produit";
+		} else if(action == "editForm") {
+			var urlToPost = "lib/ajax/admin-getProduitForm.php";
+			var titleModal = "Modifier un produit";
+		} else if(action == "deleteForm") {
+			var urlToPost = "lib/ajax/admin-deleteProduitForm.php";
+			var titleModal = "Supprimer un produit";
+		} else {
+			urlToPost = null;
 		}
-	});
+		$(".modal-form-content").html('<div class="loader"></div><br/><div class="text-center"><em>Chargement en cours</em></div>');
+		$("#modalProduit .modal-title").html(titleModal);
+		$('#modalProduit').modal('toggle');
+
+		$.ajax({
+			type: "POST",
+			url: urlToPost,
+			data: 'idProduit='+idProduit,
+			dataType: 'json',
+			success: function(retour) {
+				$(".modal-form-content").html(retour.message);
+			}
+		});
+	}
 });

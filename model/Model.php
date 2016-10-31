@@ -99,6 +99,26 @@
 			}
 		}
 
+		public static function delete($data) {
+			$table_name = static::$tableName;
+			$primary_key = static::$primary;
+			try {
+			  $sql = "DELETE FROM `".$table_name."` WHERE `".$primary_key."` = :".$primary_key."";
+			  $rep = Model::$pdo->prepare($sql);
+			  $values = array(
+			  	$primary_key => htmlspecialchars($data)
+			  );
+			  $rep->execute($values);
+			  return true;
+			} catch(PDOException $e) {
+			  if (Conf::getDebug()) {
+			    echo $e->getMessage();
+			  }
+			  return false;
+			  die();
+			}
+		}
+
 		// Factoriser le get et le set dans Model.php
 		// On va utiliser un getter générique et un setter générique, ce sera plus rapide et plus pratique
 		public function get($nom_attribut) {

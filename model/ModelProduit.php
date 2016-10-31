@@ -93,6 +93,28 @@ class ModelProduit extends Model {
 		}
 	}
 
+	public function update($data) {
+		try {
+			$sql = 'UPDATE `'.static::$tableName.'` SET label = :label, categorieProduit = :categorieProduit, description = :description, prix = :prix WHERE idProduit = :idProduit';
+			$updateProduit = Model::$pdo->prepare($sql);
+			$data = array(
+				'label' => $data['label'],
+				'categorieProduit' => $data['categorieProduit'],
+				'description' => $data['description'],
+				'prix' => $data['prix'],
+				'idProduit' => $this->idProduit
+			);
+			$updateProduit->execute($data);
+			return true;
+		} catch(PDOException $e) {
+			if(Conf::getDebug()) {
+				echo $e->getMessage();
+			}
+			return false;
+			die();
+		}
+	}
+
 	public function updateStock($newStock) {
 		try {
 

@@ -1,9 +1,12 @@
 <?php 
 	session_start(); // Sinon on a pas accès aux sessions
-
+	
+	// On est dans l'ajax, il n'a pas accès à l'auto-loader.
 	require_once '../File.php';
 	require_once File::build_path(array('model', 'ModelProduit.php'));
 	require_once File::build_path(array('controller', 'ControllerProduit.php'));
+	require_once File::build_path(array('controller', 'ControllerUtilisateur.php'));
+
 
 	$retour = array(); //Tableau de retour
 	if(ControllerUtilisateur::isConnected()) {
