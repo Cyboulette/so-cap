@@ -43,10 +43,10 @@
 						<td><?=$categorieDetails->get('label')?></td>
 						<td><?=$prix?> €</td>
 						<td><btn class="btn btn-xs btn-primary favori" data-produit="<?=$idProduit?>" data-favori="<?=$isFavori?>"><?=$favori?></btn></td>
-						<td class="stock"><?=$stock?> <btn class="btn btn-xs btn-warning stockBtn" data-produit="<?=$idProduit?>"><i class="fa fa-pencil" aria-hidden="true"></i></btn></td>
+						<td class="stock"><btn class="btn btn-xs btn-primary stockBtn" data-produit="<?=$idProduit?>"><?=$stock?>  <i class="fa fa-cog" aria-hidden="true"></i></btn></td>
 						<td>
-							<btn class="btn btn-xs btn-info">Editer</btn>
-							<btn class="btn btn-xs btn-danger">Supprimer</btn>
+							<btn class="btn btn-xs btn-warning"><i class="fa fa-pencil" aria-hidden="true"></i> Editer</btn>
+							<btn class="btn btn-xs btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</btn>
 						</td>
 			       </tr>
 				<?php } ?>

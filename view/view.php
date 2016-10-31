@@ -35,8 +35,10 @@
 	            <li class="logoBrand"><a href="index.php">So'CAP</a></li>
 	            <li <?php ControllerDefault::active('index', ''); ?>><a href="index.php">Accueil</a></li>
 	            <li <?php ControllerDefault::active('produit', ''); ?>><a href="index.php?controller=produit&action=readAll">Produits</a></li>
-	            <?php 
-					new ControllerUtilisateur();
+	            <?php
+	            	// Ici on a un bel exemple de la fonction autoload du routeur.
+	            	// On a besoin de déterminer si un user est connecté et pour cela la méthode statique est dans le Controller.
+	            	// Sauf qu'ici il n'est pas inclus de base, en utilisant ControllerUtilisateur, cela appelle l'autoload et donc auto-charge le fichier.
 					if(!ControllerUtilisateur::isConnected()) {
 						$currentUser = null;
 	            ?>

@@ -1,7 +1,7 @@
 <?php
 require_once File::build_path(array('model', 'ModelProduit.php'));
 require_once File::build_path(array('model', 'ModelCategorie.php'));
-require_once File::build_path(array('controller', 'ControllerUtilisateur.php'));
+// require_once File::build_path(array('controller', 'ControllerUtilisateur.php')); --> Devenu inutile grâce à l'auto-loader du routeur
 
 class ControllerProduit {
 

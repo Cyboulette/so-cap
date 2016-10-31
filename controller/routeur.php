@@ -1,13 +1,11 @@
 <?php
-	require_once File::build_path(array('controller', 'ControllerDefault.php')); // On charge le controller par défaut
-
+	// require_once File::build_path(array('controller', 'ControllerDefault.php')); // On charge le controller par défaut --> Devenu inutile avec l'autoloader
 	@session_start(); // On démarre la session
 
-	function __autoload($controller_name) {
-
+	// Autoloader permettant d'inclure directement un controller lorsqu'il est instancié 
+	spl_autoload_register(function($controller_name){
 		require_once File::build_path(array('controller', $controller_name.'.php')); // On inclut les fichiers par auto_load
-
-	}
+	});
 
 	if(isset($_GET['controller']) && !empty(($_GET['controller']))) {
 		$controller = $_GET['controller'];
