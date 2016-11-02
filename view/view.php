@@ -7,10 +7,11 @@
 		<title><?php echo $pagetitle; ?></title>
 
 		<!-- Bootstrap -->
-		<?php 
-			require File::build_path(array("assets", "css", "styles.php"));
-		?>
-
+		<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+		<link href="assets/css/style.css" rel="stylesheet">
+		<link href="assets/css/style-new.css" rel="stylesheet">
+		<link href="assets/css/font-awesome.min.css" rel="stylesheet">
+		<link href="assets/css/style_tablesorter.css" rel="stylesheet">
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 		<!--[if lt IE 9]>
@@ -74,9 +75,14 @@
 			}
 		?>
 
-		<?php 
-			require File::build_path(array("assets", "js", "js.php"));
-		?>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="assets/js/jquery.matchHeight.js"></script>
+		<script src="assets/js/jquery.tablesorter.min.js"></script>
+		<script src="assets/js/jquery.metadata.js"></script>
+		<script src="assets/js/bootstrap.min.js"></script>
+		<script src="assets/js/script.js"></script>
+		<script src="assets/js/produits.js"></script>
+		<script src="assets/js/admin-listProduits.js"></script>
 
 		<footer class="footer">
 			<div class="container">
