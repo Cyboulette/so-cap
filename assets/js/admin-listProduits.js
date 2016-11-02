@@ -14,7 +14,7 @@ $(function(){
 $(".favori").on('click', function(e) {
 	e.preventDefault();
 	var dataFavori = $(this).attr('data-favori');
-	var dataProduit = $(this).attr('data-produit');
+	var dataProduit = $(this).parent().parent().attr('data-produit');
 	// Ajax
 	if(dataFavori == 1) {
 		var data = 'idProduit='+dataProduit+'&favori=0';
@@ -31,8 +31,8 @@ $(".favori").on('click', function(e) {
 			console.log(retour);
 			$('.info').html(retour.message).fadeIn("slow");
 			if(retour.result == true) {
-				$('.favori[data-produit="'+retour.idProduit+'"]').attr('data-favori', retour.newFavori);
-				$('.favori[data-produit="'+retour.idProduit+'"]').html(retour.newIcon);
+				$('tr[data-produit="'+retour.idProduit+'"] td .favori').attr('data-favori', retour.newFavori);
+				$('tr[data-produit="'+retour.idProduit+'"] td .favori').html(retour.newIcon);
 			}
 			setTimeout(function(){
 				$('.info').fadeOut();
@@ -44,12 +44,12 @@ $(".favori").on('click', function(e) {
 	});
 });
 
-$(".stockBtn, .editBtn, .deleteBtn").on("click", function(e){
+$(".actionBtn").on("click", function(e){
 	e.preventDefault();
 	var action = $(this).attr('data-action');
 
 	if(action != undefined) {
-		var idProduit = $(this).attr('data-produit');
+		var idProduit = $(this).parent().parent().attr('data-produit');
 		if(action == "stockForm") {
 			var urlToPost  = "lib/ajax/admin-getStockProduit.php";
 			var titleModal = "Modifier le stock d'un produit";
@@ -59,6 +59,10 @@ $(".stockBtn, .editBtn, .deleteBtn").on("click", function(e){
 		} else if(action == "deleteForm") {
 			var urlToPost = "lib/ajax/admin-deleteProduitForm.php";
 			var titleModal = "Supprimer un produit";
+		} else if(action == "addProduitForm") {
+			var urlToPost = "lib/ajax/admin-addProduitForm.php";
+			var titleModal = "Ajouter un produit";
+			idProduit = null;
 		} else {
 			urlToPost = null;
 		}

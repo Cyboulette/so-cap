@@ -112,6 +112,7 @@ class ControllerAdmin {
 						} else {
 							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
 						}
+						break;
 					case 'deleteProduit':
 						if(isset($_POST['idProduit'],$_POST['confirm'])) {
 							$idProduit = strip_tags($_POST['idProduit']);
