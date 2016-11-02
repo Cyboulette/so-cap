@@ -30,7 +30,7 @@
 			   </thead>
 			      <tbody>
 					<?php
-					foreach ($tab_p as $p) { 
+					foreach ($tab_p as $p) {
 					$idProduit = $p->get('idProduit');
 					$label = strip_tags($p->get('label'));
 					$prix = $p->get('prix');
@@ -39,7 +39,7 @@
 					$categorieDetails = ModelCategorie::select($categorieProduit);
 					$isFavori = $p->get('favorited');
 					$favori = ($p->get('favorited') == 1 ? '<i class="fa fa-star" aria-hidden="true"></i>' : '<i class="fa fa-star-o" aria-hidden="true"></i>');
-					?>		
+					?>
 			       <tr>
 						<td><?=$idProduit?></td>
 						<td><?=$label?></td>

@@ -34,7 +34,7 @@
 <div class="row displayProduits">
 	<div class="container-fluid"><h4>Tous nos produits :</h4></div>
 	<?php
-	foreach ($tab_p as $p) { 
+	foreach ($tab_p as $p) {
 		$idProduit = $p->get('idProduit');
 		$label = strip_tags($p->get('label'));
 		$categorieProduit = $p->get('categorieProduit'); // A gérer ?
