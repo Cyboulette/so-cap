@@ -16,51 +16,71 @@
 			if(isset($_POST['idProduit'])) {
 				$idProduit = strip_tags($_POST['idProduit']);
 				if($idProduit == "null") {
+					
+					if(isset($_POST['dataPosted'])) {
+						// Si jamais on récupère de la donnée postée précédemment (donc formulaire précédemment envoyé en erreur)
+						// On la décode vu qu'elle était encodée en JSON.
+						$dataPosted = json_decode($_POST['dataPosted']);
+					}
+
+					// On stocke des variables de value="" (pour l'HTML).
+					$labelValue = (isset($dataPosted->label) ? strip_tags($dataPosted->label) : '');
+					$descriptionValue = (isset($dataPosted->description) ? strip_tags($dataPosted->description) : '');
+					$categorieValue = (isset($dataPosted->categorie) ? strip_tags($dataPosted->categorie) : '');
+					$prixValue = (isset($dataPosted->prix) ? strip_tags($dataPosted->prix) : '');
+					$stockValue = (isset($dataPosted->stock) ? strip_tags($dataPosted->stock) : '');
+					$favoriValue = (isset($dataPosted->favori) ? strip_tags($dataPosted->favori) : '');
+
 					$categories = ModelCategorie::selectAll();
 					if($categories != false) {
 						$displayCategories = '';
 						foreach ($categories as $categorie) {
 							$idCategorie = $categorie->get('idCategorie');
 							$labelCategorie = $categorie->get('label');
-							$displayCategories .= '<option value="'.$idCategorie.'">'.$labelCategorie.'</option>';
+							$selected = ($idCategorie == $categorieValue ? 'selected="selected"' : '');
+							$displayCategories .= '<option '.$selected.' value="'.$idCategorie.'">'.$labelCategorie.'</option>';
 						}
 					}
+
+					$isFavoriYes = ($favoriValue == 1 && is_numeric($favoriValue)) ? 'checked' : '';
+					$isFavoriNo = ($favoriValue == 0 && is_numeric($favoriValue)) ? 'checked' : '';
+
 					$form = '<form method="POST" role="form">
 						<div class="form-group">
 							<label for="label">* Libellé du produit</label>
-							<input type="text" required name="label" autocomplete="off" id="label" class="form-control" placeholder="Libellé du produit" />
+							<input type="text"  name="label" autocomplete="off" id="label" value="'.$labelValue.'" class="form-control" placeholder="Libellé du produit" />
 						</div>
 
 						<div class="form-group">
 							<label for="categorie">* Catégorie du produit</label>
-							<select id="categorie" required name="categorie" class="form-control">
+							<select id="categorie"  name="categorie" class="form-control">
 								'.$displayCategories.'
 							</select>
 						</div>
 
 						<div class="form-group">
 							<label for="description">Description du produit</label>
-							<textarea class="form-control" name="description" id="description" placeholder="Description du produit"></textarea>
+							<textarea class="form-control" name="description" id="description" placeholder="Description du produit">'.$descriptionValue.'</textarea>
 						</div>
 
 						<div class="form-group">
 							<label for="prix">* Prix du produit</label>
-							<input type="number" required name="prix" min="0" step="any" autocomplete="off" id="prix" class="form-control" placeholder="Prix du produit" />
+							<input type="number"  name="prix" min="0" step="any" autocomplete="off" id="prix" value="'.$prixValue.'" class="form-control" placeholder="Prix du produit" />
 						</div>
 
 						<div class="form-group">
 							<label for="favoriOui">* Produit favori</label>
 							<label class="radio-inline" for="favoriOui">
-								<input required type="radio" name="favori" id="favoriOui" value="1"> Oui
+								<input  type="radio" name="favori" '.$isFavoriYes.' id="favoriOui" value="1"> Oui
 							</label>
 							<label class="radio-inline" for="favoriNon">
-								<input required type="radio" name="favori" id="favoriNon" value="0"> Non
+								<input  type="radio" name="favori" '.$isFavoriNo.' id="favoriNon" value="0"> Non
 							</label>
 						</div>
 
 						<div class="form-group">
 							<label for="stock">* Stock initial</label>
-							<input type="number" required name="stock" min="0" step="1" autocomplete="off" id="stock" class="form-control" placeholder="Stock initial du produit" />
+							<input type="number"  name="stock" min="0" step="1" autocomplete="off" id="stock" value="'.$stockValue.'" class="form-control" placeholder="Stock initial du produit" />
 						</div>
 
 						<input type="hidden" name="idProduit" value="null">
@@ -71,7 +91,8 @@
 						</div>
 
 						<div class="alert alert-info text-center">
-							Tous les champs marqués d\'une * sont obligatoires
+							Tous les champs marqués d\'une * sont obligatoires <br/>
+							En cas d\'erreur, le formulaire sera ré-rempli
 						</div>
 					</form>';
 					$retour['result'] = true;

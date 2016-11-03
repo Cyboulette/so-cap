@@ -28,7 +28,6 @@ $(".favori").on('click', function(e) {
 		data: data,
 		dataType: 'json',
 		success: function(retour) {
-			console.log(retour);
 			$('.info').html(retour.message).fadeIn("slow");
 			if(retour.result == true) {
 				$('tr[data-produit="'+retour.idProduit+'"] td .favori').attr('data-favori', retour.newFavori);
@@ -50,6 +49,7 @@ $(".actionBtn").on("click", function(e){
 
 	if(action != undefined) {
 		var idProduit = $(this).parent().parent().attr('data-produit');
+		var dataToPost = 'idProduit='+idProduit;
 		if(action == "stockForm") {
 			var urlToPost  = "lib/ajax/admin-getStockProduit.php";
 			var titleModal = "Modifier le stock d'un produit";
@@ -62,7 +62,15 @@ $(".actionBtn").on("click", function(e){
 		} else if(action == "addProduitForm") {
 			var urlToPost = "lib/ajax/admin-addProduitForm.php";
 			var titleModal = "Ajouter un produit";
-			idProduit = null;
+			if(typeof dataPosted !== 'undefined') {
+				// Si jamais on a déjà tenté d'envoyer le formulaire mais qu'il y avait une erreur on renvoit les données
+				// On les encode en JSON pour pouvoir les transmettre correctement et en sécurité !
+				dataToPost = 'idProduit=null'+"&dataPosted="+JSON.stringify(dataPosted);
+			} else {
+				// Sinon notre variable ne bouge pas
+				dataToPost = 'idProduit=null';
+			}
+			// idProduit doit valoir null pour vérifier l'intégrité des données du côté du PHP (au cas ou un malin s'amsuserait à modifier le form)
 		} else {
 			urlToPost = null;
 		}
@@ -73,7 +81,7 @@ $(".actionBtn").on("click", function(e){
 		$.ajax({
 			type: "POST",
 			url: urlToPost,
-			data: 'idProduit='+idProduit,
+			data: dataToPost,
 			dataType: 'json',
 			success: function(retour) {
 				$(".modal-form-content").html(retour.message);

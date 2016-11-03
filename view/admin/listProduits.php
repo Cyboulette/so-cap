@@ -32,6 +32,11 @@
 			   </thead>
 			      <tbody>
 					<?php
+					// $dataPosted correspond aux données envoyées dans un formulaire, très utile en cas d'erreur.
+					if(isset($dataPosted)) {
+						echo $dataPosted;
+					}
+
 					foreach ($tab_p as $p) {
 					$idProduit = $p->get('idProduit');
 					$label = strip_tags($p->get('label'));

@@ -199,5 +199,30 @@ class ModelProduit extends Model {
 			die();
 		}
 	}
+
+	public function save() {
+		try {
+			$sql = 'INSERT INTO `'.static::$tableName.'` (idProduit, label, categorieProduit, description, prix, favorited) VALUES (NULL, :label, :categorieProduit, :description, :prix, :favorited)';
+			$addProduit = Model::$pdo->prepare($sql);
+
+			$values = array(
+				'label' => strip_tags($this->get('label')),
+				'categorieProduit' => strip_tags($this->get('categorieProduit')),
+				'description' => strip_tags($this->get('description')),
+				'prix' => strip_tags($this->get('prix')),
+				'favorited' => strip_tags($this->get('favorited'))
+			);
+
+			$addProduit->execute($values);
+			$lastId = Model::$pdo->lastInsertId();
+			return $lastId;
+		} catch(PDOException $e) {
+			if (Conf::getDebug()) {
+				echo $e->getMessage();
+			}
+			return false;
+			die();
+		}
+	}
 }
 ?>

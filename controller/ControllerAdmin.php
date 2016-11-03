@@ -62,6 +62,75 @@ class ControllerAdmin {
 							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
 						}
 						break;
+					case 'addProduit':
+						if(isset($_POST['idProduit'],$_POST['label'],$_POST['categorie'],$_POST['prix'], $_POST['favori'], $_POST['stock'])) {
+							$idProduit = $_POST['idProduit'];
+							if($idProduit == "null") {
+								$label = strip_tags($_POST['label']);
+								if(!empty($label) && !ctype_space($label)) {
+									$checkCategorie = ModelCategorie::select($_POST['categorie']);
+									if($checkCategorie != false) {
+										$idCategorie = $checkCategorie->get('idCategorie');
+										$prix = strip_tags($_POST['prix']);
+										if(is_numeric($prix)) {
+											if($prix >= 0) {
+												$stock = strip_tags($_POST['stock']);
+												if(is_numeric($stock) && $stock >= 0) {
+													$favorited = strip_tags($_POST['favori']);
+													if($favorited != "1" && $favorited != "0") {
+														$favorited = "0";
+													}
+
+													if(isset($_POST['description'])) {
+														$description = strip_tags($_POST['description']);
+													} else {
+														$description = NULL;
+													}
+													
+													$produit = new ModelProduit(0, $label, $idCategorie, $description, $prix, $favorited);
+													$idProduitSaved = $produit->save();
+
+													if($idProduitSaved != false) {
+														$produit = ModelProduit::select($idProduitSaved);
+														if($produit != false) {
+															$checkUpdateStock = $produit->updateStock($stock);
+															if($checkUpdateStock != false) {
+																$notif = '<div class="alert alert-success">Produit ajouté avec succès !</div>';
+															} else {
+																$notif = '<div class="alert alert-danger">Impossible d\'initialiser le stock pour ce produit !</div>';
+															}
+														} else {
+															$notif = '<div class="alert alert-danger">Impossible d\'ajouter ce produit !</div>';
+														}
+													} else {
+														$notif = '<div class="alert alert-danger">Impossible d\'ajouter ce produit !</div>';
+													}
+												} else {
+													$notif = '<div class="alert alert-danger">Le stock doit être une valeur entière >= 0 !</div>';
+												}
+											} else {
+												$notif = '<div class="alert alert-danger">Le prix du produit doit être >= 0 !</div>';
+											}
+										} else {
+											$notif = '<div class="alert alert-danger">Vous devez saisir un prix correct !</div>';
+										}
+									} else {
+										$notif = '<div class="alert alert-danger">La catégorie sélectionnée n\'existe pas !</div>';
+									}
+								} else {
+									$notif = '<div class="alert alert-danger">Le nom du produit ne peut être vide !</div>';
+								}
+							} else {
+								$notif = '<div class="alert alert-danger">Erreur lors de la transmission des données !</div>';
+							}
+						} else {
+							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
+						}
+						// Dans le cas d'un ajout et qu'on ne veut pas resaisir TOUT le formulaire on transmet les data.
+						if(isset($_POST)) {
+							$dataPosted = '<script>var dataPosted = '.json_encode($_POST).'</script>';
+						}
+						break;
 					case 'updateProduit':
 						if(isset($_POST['idProduit'],$_POST['label'],$_POST['categorie'],$_POST['prix'])) {
 							$idProduit = strip_tags($_POST['idProduit']);
