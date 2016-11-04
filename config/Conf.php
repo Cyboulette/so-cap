@@ -2,21 +2,21 @@
 	class Conf {
 
 		// Configuration pour local chez Quentin
-		static private $databases = array (
+		/*static private $databases = array (
 			'hostname' => 'localhost',
 			'database' => 'railot',
 			'login' => 'root',
 			'password' => ''
-		);
+		);*/
 
 		
 		//Configuration pour l'IUT
-		/*static private $databases = array (
+		static private $databases = array (
 			'hostname' => 'infolimon',
 			'database' => 'railot',
 			'login' => 'railot',
 			'password' => 'tomrailo'
-		);*/
+		);
 
 		static private $debug = true;
 

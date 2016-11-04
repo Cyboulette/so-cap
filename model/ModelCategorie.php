@@ -13,15 +13,32 @@ class ModelCategorie extends Model {
 
 	// Le constructeur, qui peut accepter du NULL (dans le cas d'un FETCH::CLASS)
 	// Constructeur différent dans chaque ModelPAGE.php
-	public function __construct($idProduit = NULL, $label = NULL, $categorieProduit = NULL, $description = NULL, $prix = NULL, $favorited = NULL) {
-	    if (!is_null($idProduit) && !is_null($label) && !is_null($categorieProduit) && !is_null($description) && !is_null($prix) && !is_null($favorited)) {
-	        $this->idProduit = $idProduit;
+	public function __construct($idCategorie = NULL, $label = NULL) {
+	    if (!is_null($idCategorie) && !is_null($label)) {
+	        $this->idCategorie = $idCategorie;
 	        $this->label = $label;
-	        $this->categorieProduit = $categorieProduit;
-	        $this->description = $description;
-	        $this->prix = $prix;
-	        $this->favorited = $favorited;
 	    }
+	}
+
+	public function save() {
+		try {
+			$sql = 'INSERT INTO `'.static::$tableName.'` (idCategorie, label) VALUES (NULL, :label)';
+			$addCategorie = Model::$pdo->prepare($sql);
+
+			$values = array(
+				'label' => strip_tags($this->get('label'))
+			);
+
+			$addCategorie->execute($values);
+			$lastId = Model::$pdo->lastInsertId();
+			return $lastId;
+		} catch(PDOException $e) {
+			if (Conf::getDebug()) {
+				echo $e->getMessage();
+			}
+			return false;
+			die();
+		}
 	}
 }
 ?>

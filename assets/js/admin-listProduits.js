@@ -71,6 +71,10 @@ $(".actionBtn").on("click", function(e){
 				dataToPost = 'idProduit=null';
 			}
 			// idProduit doit valoir null pour vérifier l'intégrité des données du côté du PHP (au cas ou un malin s'amsuserait à modifier le form)
+		} else if(action == "manageCateg") {
+			var titleModal = "Gérer les catégories";
+			var urlToPost = "lib/ajax/admin-listCategories.php";
+			dataToPost = 'idCategorie=null';
 		} else {
 			urlToPost = null;
 		}
@@ -84,7 +88,11 @@ $(".actionBtn").on("click", function(e){
 			data: dataToPost,
 			dataType: 'json',
 			success: function(retour) {
+				console.log(retour);
 				$(".modal-form-content").html(retour.message);
+			},
+			error: function(retour) {
+				console.log(retour);
 			}
 		});
 	}

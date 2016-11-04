@@ -20,7 +20,7 @@ class ControllerAdmin {
 			$nombreUsers = ModelUtilisateur::getNombreActifsAndValid();
 			$nombreProduits = count(ModelProduit::selectAll());
 			$nombreCommandes = count(ModelCommande::selectAll());
-			$argentTotal = ModelCommande::getTotalMontant();
+			$argentTotal = (is_null(ModelCommande::getTotalMontant()) ? '0' : ModelCommande::getTotalMontant());
 
 			require File::build_path(array('view', 'view.php'));
 		} else {
@@ -205,6 +205,28 @@ class ControllerAdmin {
 							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
 						}
 						break;
+					case 'addCategorie':
+						if(isset($_POST['labelCategorie'])) {
+							$labelCategorie = strip_tags($_POST['labelCategorie']);
+							if(!empty($labelCategorie) && !ctype_space($labelCategorie)) {
+								$checkCategorie = ModelCategorie::selectCustom('label', $labelCategorie);
+								if($checkCategorie == false) {
+									$newCategorie = new ModelCategorie(0, $labelCategorie);
+									$checkCategorieSave = $newCategorie->save();
+									if($checkCategorieSave != false) {
+										$notif = '<div class="alert alert-success">Catégorie ajoutée avec succès !</div>';
+									} else {
+										$notif = '<div class="alert alert-danger">Impossible d\'ajouter cette catégorie, veuillez nous contacter !</div>';
+									}
+								} else {
+									$notif = '<div class="alert alert-danger">Ce nom de catégorie existe déjà !</div>';
+								}
+							} else {
+								$notif = '<div class="alert alert-danger">Vous ne pouvez pas saisir un nom de catégorie vide !</div>';
+							}
+						} else {
+							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
+						}
 					default:
 						break;
 				}

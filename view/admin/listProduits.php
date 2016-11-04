@@ -12,61 +12,61 @@
 	<div class="alert alert-info">Un produit en <b>favori</b> apparaîtra dans l'onglet "Notre sélection" des produits</div>
 	<div class="form-group text-center">
 		<btn class="btn btn-success btn-xs actionBtn" data-action="addProduitForm"><i class="fa fa-plus" aria-hidden="true"></i> Ajouter un produit</btn>
+		<btn class="btn btn-warning btn-xs actionBtn" data-action="manageCateg"><i class="fa fa-cog" aria-hidden="true"></i> Gérer les catégories</btn>
 		<a href="index.php?controller=admin&action=listProduits" class="btn btn-xs btn-primary"><i class="fa fa-refresh" aria-hidden="true"></i> Rafraichir</a>
 	</div>
 	<div class="row">
 		<div class="table-responsive">
 			<table class="table table-hover listProduitsTable">
-			   <thead>
-			       <tr>
-			           <th>Produit n°</th>
-			           <th>Nom</th>
-			           <th>Catégorie</th>
-			           <th>Prix</th>
-			           <th>Favori</th>
-			           <th>Stock</th>
-			           <th>Images</th>
-			           <th>Action</th>
-			       </tr>
+				<thead>
+					<tr>
+						<th>Produit n°</th>
+						<th>Nom</th>
+						<th>Catégorie</th>
+						<th>Prix</th>
+						<th>Favori</th>
+						<th>Stock</th>
+						<th>Images</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+	      		<tbody>
+				<?php
+				// $dataPosted correspond aux données envoyées dans un formulaire, très utile en cas d'erreur.
+				if(isset($dataPosted)) {
+					echo $dataPosted;
+				}
 
-			   </thead>
-			      <tbody>
-					<?php
-					// $dataPosted correspond aux données envoyées dans un formulaire, très utile en cas d'erreur.
-					if(isset($dataPosted)) {
-						echo $dataPosted;
-					}
-
-					foreach ($tab_p as $p) {
-					$idProduit = $p->get('idProduit');
-					$label = strip_tags($p->get('label'));
-					$prix = $p->get('prix');
-					$stock = $p->getStock();
-					$categorieProduit = $p->get('categorieProduit');
-					$categorieDetails = ModelCategorie::select($categorieProduit);
-					$isFavori = $p->get('favorited');
-					$favori = ($p->get('favorited') == 1 ? '<i class="fa fa-star" aria-hidden="true"></i>' : '<i class="fa fa-star-o" aria-hidden="true"></i>');
-					?>
-			       <tr data-produit="<?=$idProduit?>">
-						<td><?=$idProduit?></td>
-						<td><?=$label?></td>
-						<td><?=$categorieDetails->get('label')?></td>
-						<td><?=$prix?> €</td>
-						<td>
-							<btn class="btn btn-xs btn-primary favori" data-favori="<?=$isFavori?>"><?=$favori?></btn>
-						</td>
-						<td class="stock">
-							<btn class="btn btn-xs btn-primary actionBtn" data-action="stockForm"><?=$stock?>  <i class="fa fa-cog" aria-hidden="true"></i></btn>
-						</td>
-						<td>
-							<btn class="btn btn-xs btn-primary actionBtn"><i class="fa fa-picture-o" aria-hidden="true"></i> Gérer</btn>
-						</td>
-						<td>
-							<btn class="btn btn-xs btn-warning actionBtn" data-action="editForm"><i class="fa fa-pencil" aria-hidden="true"></i> Editer</btn>
-							<btn class="btn btn-xs btn-danger actionBtn" data-action="deleteForm"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</btn>
-						</td>
-			       </tr>
-				<?php } ?>
+				foreach ($tab_p as $p) {
+				$idProduit = $p->get('idProduit');
+				$label = strip_tags($p->get('label'));
+				$prix = $p->get('prix');
+				$stock = $p->getStock();
+				$categorieProduit = $p->get('categorieProduit');
+				$categorieDetails = ModelCategorie::select($categorieProduit);
+				$isFavori = $p->get('favorited');
+				$favori = ($p->get('favorited') == 1 ? '<i class="fa fa-star" aria-hidden="true"></i>' : '<i class="fa fa-star-o" aria-hidden="true"></i>');
+				?>
+	       		<tr data-produit="<?=$idProduit?>">
+					<td><?=$idProduit?></td>
+					<td><?=$label?></td>
+					<td><?=$categorieDetails->get('label')?></td>
+					<td><?=$prix?> €</td>
+					<td>
+						<btn class="btn btn-xs btn-primary favori" data-favori="<?=$isFavori?>"><?=$favori?></btn>
+					</td>
+					<td class="stock">
+						<btn class="btn btn-xs btn-primary actionBtn" data-action="stockForm"><?=$stock?>  <i class="fa fa-cog" aria-hidden="true"></i></btn>
+					</td>
+					<td>
+						<btn class="btn btn-xs btn-primary actionBtn"><i class="fa fa-picture-o" aria-hidden="true"></i> Gérer</btn>
+					</td>
+					<td>
+						<btn class="btn btn-xs btn-warning actionBtn" data-action="editForm"><i class="fa fa-pencil" aria-hidden="true"></i> Editer</btn>
+						<btn class="btn btn-xs btn-danger actionBtn" data-action="deleteForm"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</btn>
+					</td>
+	       		</tr>
+			<?php } ?>
 				</tbody>
 			</table>
 		</div>
