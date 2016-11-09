@@ -55,6 +55,7 @@
 	            		<li <?php ControllerDefault::active('admin', ''); ?>><a href="index.php?controller=admin&action=index">Administration</a></li>
 	            	<?php } ?>
 	            <?php } ?>
+	            	<li><a href="#" data-toggle="modal" data-target="#panier" class="panier"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Panier <span class="label label-success label-xs">10</span></a></li>
 	          </ul>
 	        </div><!--/.nav-collapse -->
 	      </div>
@@ -89,5 +90,29 @@
 				<p class="text-muted">So'Cap 2016-2017 - Tous droits réservés.</p>
 			</div>
 		</footer>
+
+		<!-- Modal -->
+		<div class="modal fade" id="panier" tabindex="-1" role="dialog" aria-labelledby="monPanier">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="monPanier">Panier actuel</h4>
+		      </div>
+		      <div class="modal-body">
+		      	<?php 
+		      		$panier = ControllerDefault::afficherPanier();
+		      		echo $panier['message'];
+		      	?>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+		        <?php if($panier['nbProduits'] > 0) { ?>
+		        	<button type="button" class="btn btn-primary">Passer au paiement >></button>
+		        <?php } ?>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 	</body>
 </html>

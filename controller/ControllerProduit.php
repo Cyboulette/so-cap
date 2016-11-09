@@ -93,14 +93,40 @@ class ControllerProduit {
    }
 
    public static function addCart() {
-      if(isset($_GET['idProduit'])) {
-         $produit = ModelProduit::select($_GET['idProduit']);
+      if(isset($_POST['idProduit'])) {
+         $produit = ModelProduit::select($_POST['idProduit']);
          if($produit != false) {
             if($produit->getStock() != 0) {
-               $view = 'addCart';
-               $pagetitle= 'So\'Cap - Achat d\'un produit';
-               $powerNeeded = ControllerUtilisateur::isConnected();
-               require File::build_path(array('view', 'view.php'));               
+               if(isset($_POST['quant'][1])) {
+                  $quantity = strip_tags($_POST['quant'][1]);
+                  if(is_numeric($quantity) && $quantity > 0) {
+                     $idProduit = $produit->get('idProduit');
+                     $prixUnité = $produit->get('prix');
+
+                     if(isset($_SESSION['panier'][$idProduit])) {
+                        $produitSession = unserialize($_SESSION['panier'][$idProduit]);
+                        $storedQuantite = intval($produitSession['quantité']);
+                        $newQuantité = $quantity+$storedQuantite;
+                        $quantity = $newQuantité;
+                     }
+
+                     $dataProduit = array(
+                        'idProduit' => $idProduit,
+                        'quantité' => $quantity
+                     );
+
+                     $_SESSION['panier'][$produit->get('idProduit')] = serialize($dataProduit);
+
+                     $view = 'addCart';
+                     $pagetitle= 'So\'Cap - Achat d\'un produit';
+                     $powerNeeded = ControllerUtilisateur::isConnected();
+                     require File::build_path(array('view', 'view.php'));
+                  } else {
+                     ModelProduit::error("La quantité doit être supérieure à 0");
+                  }
+               } else {
+                  ModelProduit::error("Vous devez préciser une quantité");
+               }
             } else {
                ModelProduit::error("Impossible d'acheter ce produit, nous ne l'avons plus en stock");
             }

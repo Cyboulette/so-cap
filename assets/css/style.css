@@ -192,6 +192,10 @@ body {
 	float: right;
 }*/
 
+.formAddCart {
+	display: inline-block;
+}
+
 .info {
 	display: none;
 	position: absolute;

@@ -57,20 +57,23 @@ $stockMin = ($p->getStock() == 0 ? '0' : '1');
 		</div>
 
 		<div class="buttons">
-			<div class="input-group quantity">
-				<div class="input-group-btn">
-					<button type="button" class="btn btn-default btn-sm btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">
-						<span class="glyphicon glyphicon-minus"></span>
-					</button>
+			<form method="post" action="index.php?controller=produit&action=addCart">
+				<div class="input-group quantity">
+					<div class="input-group-btn">
+						<button type="button" class="btn btn-default btn-sm btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">
+							<span class="glyphicon glyphicon-minus"></span>
+						</button>
+					</div>
+					<input type="text" name="quant[1]" class="form-control input-sm input-number" readonly="readonly" value="<?=$stockMin?>" min="1" max="<?=$stock?>">
+					<div class="input-group-btn">
+						<button type="button" class="btn btn-default btn-sm btn-number" data-type="plus" data-field="quant[1]">
+							<span class="glyphicon glyphicon-plus"></span>
+						</button>
+						<button type="submit" class="btn <?=$disabledAchat?> btn-sm"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Ajouter au panier</button>
+					</div>
 				</div>
-				<input type="text" name="quant[1]" class="form-control input-sm input-number" readonly="readonly" value="<?=$stockMin?>" min="0" max="<?=$stock?>">
-				<div class="input-group-btn">
-					<button type="button" class="btn btn-default btn-sm btn-number" data-type="plus" data-field="quant[1]">
-						<span class="glyphicon glyphicon-plus"></span>
-					</button>
-					<a href="index.php?controller=produit&action=addCart&idProduit=<?=$idProduit?>" class="btn <?=$disabledAchat?> btn-sm"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Ajouter au panier</a>
-				</div>
-			</div>
+				<input type="hidden" name="idProduit" value="<?=$idProduit?>" />
+			</form>
 		</div>
 
 	</div>
