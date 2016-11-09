@@ -1,5 +1,4 @@
 Détails de l'ajout au panier : <br/>
 <?php
-	var_dump($produit);
+	var_dump($_SESSION);
 ?>
-<h2>Quantité : <?=$quantity?></h2>

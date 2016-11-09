@@ -100,27 +100,8 @@ class ControllerProduit {
                if(isset($_POST['quant'][1])) {
                   $quantity = strip_tags($_POST['quant'][1]);
                   if(is_numeric($quantity) && $quantity > 0) {
-                     $idProduit = $produit->get('idProduit');
-                     $prixUnité = $produit->get('prix');
-
-                     if(isset($_SESSION['panier'][$idProduit])) {
-                        $produitSession = unserialize($_SESSION['panier'][$idProduit]);
-                        $storedQuantite = intval($produitSession['quantité']);
-                        $newQuantité = $quantity+$storedQuantite;
-                        $quantity = $newQuantité;
-                     }
-
-                     $dataProduit = array(
-                        'idProduit' => $idProduit,
-                        'quantité' => $quantity
-                     );
-
-                     $_SESSION['panier'][$produit->get('idProduit')] = serialize($dataProduit);
-
-                     $view = 'addCart';
-                     $pagetitle= 'So\'Cap - Achat d\'un produit';
-                     $powerNeeded = ControllerUtilisateur::isConnected();
-                     require File::build_path(array('view', 'view.php'));
+                     $panier = new ControllerPanier();
+                     $panier->add($produit->get('idProduit'), $quantity);
                   } else {
                      ModelProduit::error("La quantité doit être supérieure à 0");
                   }

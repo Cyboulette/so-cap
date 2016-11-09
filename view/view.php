@@ -55,7 +55,8 @@
 	            		<li <?php ControllerDefault::active('admin', ''); ?>><a href="index.php?controller=admin&action=index">Administration</a></li>
 	            	<?php } ?>
 	            <?php } ?>
-	            	<li><a href="#" data-toggle="modal" data-target="#panier" class="panier"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Panier <span class="label label-success label-xs">10</span></a></li>
+	            	<li><a href="#" data-toggle="modal" data-target="#panier" class="panier"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Panier
+	            	<span class="label label-success label-xs"><?=ControllerPanier::nombreProduits();?></span></a></li>
 	          </ul>
 	        </div><!--/.nav-collapse -->
 	      </div>
@@ -81,9 +82,13 @@
 		<script src="assets/js/jquery.tablesorter.min.js"></script>
 		<script src="assets/js/jquery.metadata.js"></script>
 		<script src="assets/js/bootstrap.min.js"></script>
+		<?php 
+			// JS pour chaque objet/controller/view
+			if(file_exists("assets/js/pages/".static::$object.".js")) {
+				echo '<script src="assets/js/pages/'.static::$object.'.js"></script>';
+			}
+		?>
 		<script src="assets/js/script.js"></script>
-		<script src="assets/js/produits.js"></script>
-		<script src="assets/js/admin-listProduits.js"></script>
 
 		<footer class="footer">
 			<div class="container">
@@ -93,7 +98,7 @@
 
 		<!-- Modal -->
 		<div class="modal fade" id="panier" tabindex="-1" role="dialog" aria-labelledby="monPanier">
-		  <div class="modal-dialog" role="document">
+		  <div class="modal-dialog modal-lg" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -101,7 +106,7 @@
 		      </div>
 		      <div class="modal-body">
 		      	<?php 
-		      		$panier = ControllerDefault::afficherPanier();
+		      		$panier = ControllerPanier::afficherPanier();
 		      		echo $panier['message'];
 		      	?>
 		      </div>
