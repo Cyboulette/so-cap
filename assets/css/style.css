@@ -184,7 +184,7 @@ body {
 	font-size: 2em;
 }
 
-.listProduitsTable td, .listProduitsTable tr, .listProduitsTable th {
+.listProduitsTable td, .panierTable td, .listProduitsTable tr, .panierTable tr, .listProduitsTable th, .panierTable th {
 	text-align: center;
 }
 

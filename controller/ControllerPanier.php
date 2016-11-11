@@ -106,10 +106,11 @@ class ControllerPanier {
 		if(isset($_SESSION['panier'])) {
 			$produitsPanier = $_SESSION['panier'];
 
-			$retour = '<table class="table table-hover">
+			$retour = '<div class="table-responsive"><table class="table table-hover panierTable">
 				<thead>
 					<tr>
-						<th>Produit n°</th>
+						<th>#</th>
+						<th>Nom du produit</th>
 						<th>Prix Unitaire</th>
 						<th>Quantité</th>
 						<th>Prix final</th>
@@ -126,6 +127,7 @@ class ControllerPanier {
 				if($produit != false) {
 					$idProduit = $produit->get('idProduit');
 					$prixUnitaire = $produit->get('prix');
+					$nomProduit = strip_tags($produit->get('label'));
 
 					if($quantite > $produit->getStock()) {
 						$quantiteReelle = $produit->getStock();
@@ -138,6 +140,7 @@ class ControllerPanier {
 
 					$retour .= '<tr>
 						<td>'.$idProduit.'</td>
+						<td>'.$nomProduit.'</td>
 						<td>'.$prixUnitaire.' €</td>
 						<td>'.$quantiteReelle.'</td>
 						<td>'.$prixTotalProd.' €</td>
@@ -149,7 +152,7 @@ class ControllerPanier {
 				}
 			}
 
-			$retour .= '</tbody></table>
+			$retour .= '</tbody></table></div>
 			<h3>Prix à payer : '.$prixTotal.' € TTC</h3>';
 
 			return array(
