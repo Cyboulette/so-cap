@@ -45,6 +45,53 @@ class ControllerPanier {
 		}
 	}
 
+	public static function addFromAjax() {
+		$retour = array();
+		if(isset($_POST['idProduit'], $_POST['quantite'])) {
+			$idProduit = strip_tags($_POST['idProduit']);
+			$quantite = strip_tags($_POST['quantite']);
+
+			$produit = ModelProduit::select($idProduit);
+			if($produit != false) {
+				if($produit->getStock() != 0) {
+					if(is_numeric($quantite) && $quantite > 0) {
+						$idProduit = $produit->get('idProduit');
+
+						if(isset($_SESSION['panier'][$idProduit])) {
+							$quantiteTotale = $_SESSION['panier'][$idProduit] + $quantite;
+						} else {
+							$quantiteTotale = $quantite;
+						}
+
+						if($quantiteTotale <= $produit->getStock()) {
+							$_SESSION['panier'][$idProduit] = $quantiteTotale;
+							$retour['result'] = true;
+							$retour['nbProduits'] = self::nombreProduits();
+							$retour['nouveauPanier'] = self::afficherPanier();
+							$retour['message'] = '<div class="alert alert-success">Le produit a bien été ajouté à votre panier !</div>';
+						} else {
+							$retour['result'] = false;
+							$retour['message'] = '<div class="alert alert-danger">Vous ne pouvez pas dépasser le stock maximal pour ce produit</div>';
+						}
+					} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">La quantité doit être supérieure à 0</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Impossible d\'ajouter ce produit au panier, nous ne l\'avons plus en stock</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Le produit demandé n\'existe pas !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez préciser un produit et une quantité</div>';
+		}
+		echo json_encode($retour);
+	}
+
 	public static function remove() {
 		$idProduit = $_GET['idProduit'];
 		unset($_SESSION['panier'][$idProduit]);
@@ -79,7 +126,6 @@ class ControllerPanier {
 				if($produit != false) {
 					$idProduit = $produit->get('idProduit');
 					$prixUnitaire = $produit->get('prix');
-					$prixTotalProd = $quantite * $prixUnitaire;
 
 					if($quantite > $produit->getStock()) {
 						$quantiteReelle = $produit->getStock();
@@ -87,6 +133,8 @@ class ControllerPanier {
 					} else {
 						$quantiteReelle = $quantite;
 					}
+
+					$prixTotalProd = $quantiteReelle * $prixUnitaire;
 
 					$retour .= '<tr>
 						<td>'.$idProduit.'</td>

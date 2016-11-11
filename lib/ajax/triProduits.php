@@ -79,16 +79,13 @@
 
 				<div class="buttons">
 				<a href="?controller=produit&action=read&idProduit='.$idProduit.'" class="btn btn-primary btn-xs"><i class="fa fa-search" aria-hidden="true"></i> Voir le détail</a>
-				<form class="formAddCart" method="post" action="index.php?controller=produit&action=addCart">
-					<input type="hidden" name="quant[1]" value="1" />
-					<input type="hidden" name="idProduit" value="'.$idProduit.'" />
-					<button class="btn '.$disabledAchat.' btn-xs"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Ajouter au panier</button>
-				</form>
+				<button class="addCart btn '.$disabledAchat.' btn-xs" data-produit="'.$idProduit.'"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Ajouter au panier</button>
 				</div>
 				</div>
 				</div>';
 				array_push($produitsFinaux, $data);
 			}
+			array_push($produitsFinaux, '<script>init();</script>');
 			$retour['produits'] = $produitsFinaux;
 			$retour['result'] = true;
 		} else {

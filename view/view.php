@@ -56,7 +56,7 @@
 	            	<?php } ?>
 	            <?php } ?>
 	            	<li><a href="#" data-toggle="modal" data-target="#panier" class="panier"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Panier
-	            	<span class="label label-success label-xs"><?=ControllerPanier::nombreProduits();?></span></a></li>
+	            	<span class="label label-success label-xs nbProduitsPanier"><?=ControllerPanier::nombreProduits();?></span></a></li>
 	          </ul>
 	        </div><!--/.nav-collapse -->
 	      </div>
@@ -67,6 +67,11 @@
 	 			if($view != 'index') {
 					echo '<div class="container page">';
 				}
+
+				if(isset($notif)) {
+					echo '<div class="info notif">'.$notif.'</div>';
+				}
+				echo '<div class="info"></div>';
 					$filepath = File::build_path(array("view", static::$object, "$view.php"));
 					require $filepath;
 				if($view != 'index') {
