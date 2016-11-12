@@ -1,5 +1,5 @@
 function triProduits() {
-	$("#navigationProduits ul li a").on('click', function(e) {
+	$("#navigationProduits ul li a").unbind('click').on('click', function(e) {
 		e.preventDefault();
 		var datatri = $(this).parent().attr('data-tri');
 		var isActive = $(this).parent().hasClass('active');
@@ -46,7 +46,7 @@ function triProduits() {
 }
 
 function rechercheForm() {
-	$("#rechercheForm").on('submit', function(e) {
+	$("#rechercheForm").unbind('submit').on('submit', function(e) {
 		e.preventDefault();
 		var dataSearch = $(".searchText").val();
 		
@@ -77,7 +77,7 @@ function rechercheForm() {
 }
 
 function addCartClick() {
-	$(".addCart").on('click', function(e) {
+	$(".addCart").unbind('click').on('click', function(e) {
 		e.preventDefault();
 		var nbProduitsPanierActuel = parseInt($('.nbProduitsPanier').text());
 		var idProduit = $(this).attr('data-produit');
@@ -117,10 +117,54 @@ function addCartClick() {
 	});
 }
 
+function modalActions() {
+	$('.actionBtn').unbind('click').on('click', function(e) {
+		e.preventDefault();
+
+		var idProduit = $(this).parent().parent().attr('data-produit');
+		var action = $(this).attr('data-action');
+
+		var data = 'idProduit='+encodeURIComponent(idProduit);
+
+		if(action == "changeQuantite") {
+			var actualQuantite = parseInt($(this).text());
+			var nouvelleQuantite = prompt("Entrez la quantité désirée", actualQuantite);
+			if($.isNumeric(nouvelleQuantite) && nouvelleQuantite > 0) {
+				data += '&quantite='+encodeURIComponent(nouvelleQuantite);
+			}
+		}
+
+		$.ajax({
+			type: "POST",
+			url: "index.php?controller=panier&action="+action,
+			data: data,
+			dataType: 'json',
+			success: function(retour) {
+				$('.infoModal').html(retour.message).fadeIn("slow");
+
+				if(retour.result == true) {
+					$('.nbProduitsPanier').addClass('nbProduitsPanierNew');
+					$('.nbProduitsPanier').text(retour.nbProduits);
+					$('#panier .modal-body').html(retour.nouveauPanier.message);
+				}
+
+				setTimeout(function(){
+					$('.nbProduitsPanier').removeClass('nbProduitsPanierNew');
+					$('.infoModal').fadeOut();
+				}, 1000);
+			},
+			error: function(retour) {
+				console.log(retour);
+			}
+		});
+	});
+}
+
 function init() {
 	triProduits();
 	rechercheForm();
 	addCartClick();
+	modalActions();
 }
 
 $(function() {

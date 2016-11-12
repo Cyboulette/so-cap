@@ -204,6 +204,11 @@ body {
 	z-index: 10000;
 }
 
+.infoModal {
+	margin-top: 10px;
+	display: none;
+}
+
 .notif {
 	display: block;
 }

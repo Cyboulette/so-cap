@@ -92,14 +92,71 @@ class ControllerPanier {
 		echo json_encode($retour);
 	}
 
-	public static function remove() {
-		$idProduit = $_GET['idProduit'];
-		unset($_SESSION['panier'][$idProduit]);
-		self::$object = 'default';
-		$view = 'index';
-		$pagetitle = 'So\'Cap';
-		$powerNeeded = true;
-		require File::build_path(array('view', 'view.php'));
+	public static function removeProductPanier() {
+		$retour = array();
+		if(isset($_POST['idProduit'])) {
+			$idProduit = $_POST['idProduit'];
+			unset($_SESSION['panier'][$idProduit]);
+
+			if(self::nombreProduits() == 0) {
+				unset($_SESSION['panier']);
+			}
+
+			$retour['result'] = true;
+			$retour['nbProduits'] = self::nombreProduits();
+			$retour['nouveauPanier'] = self::afficherPanier();
+			$retour['message'] = '<div class="alert alert-success">Le produit a bien été retiré du panier !</div>';
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez préciser un produit !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	public static function changeQuantite() {
+		$retour = array();
+		if(isset($_POST['idProduit'],$_POST['quantite'])) {
+			$idProduit = $_POST['idProduit'];
+			$quantite = $_POST['quantite'];
+			$produit = ModelProduit::select($idProduit);
+
+			if($produit != false) {
+				if($produit->getStock() != 0) {
+					if(is_numeric($quantite) && $quantite > 0) {
+						$idProduit = $produit->get('idProduit');
+						if(isset($_SESSION['panier'][$idProduit])) {
+							if($quantite <= $produit->getStock()) {
+								$_SESSION['panier'][$idProduit] = $quantite;
+								$retour['result'] = true;
+								$retour['nbProduits'] = self::nombreProduits();
+								$retour['nouveauPanier'] = self::afficherPanier();
+								$retour['message'] = '<div class="alert alert-success">La quantité a bien été mise à jour !</div>';
+							} else {
+								$retour['result'] = false;
+								$retour['message'] = '<div class="alert alert-danger">Vous ne pouvez pas dépasser le stock maximal pour ce produit</div>';
+							}
+						} else {
+							$retour['result'] = false;
+							$retour['message'] = '<div class="alert alert-danger">Vous devez avoir le produit dans votre panier pour changer sa quantité !</div>';
+						}
+					} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">La quantité doit être supérieure à 0</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Impossible d\'ajouter ce produit au panier, nous ne l\'avons plus en stock</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Le produit demandé n\'existe pas !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez préciser un produit et une quantité !</div>';
+		}
+
+		echo json_encode($retour);
 	}
 
 	public static function afficherPanier() {
@@ -138,13 +195,13 @@ class ControllerPanier {
 
 					$prixTotalProd = $quantiteReelle * $prixUnitaire;
 
-					$retour .= '<tr>
+					$retour .= '<tr data-produit="'.$idProduit.'">
 						<td>'.$idProduit.'</td>
-						<td>'.$nomProduit.'</td>
+						<td><a href="index.php?controller=produit&action=read&idProduit='.$idProduit.'">'.$nomProduit.'</a></td>
 						<td>'.$prixUnitaire.' €</td>
-						<td>'.$quantiteReelle.'</td>
+						<td><btn class="btn btn-xs btn-default actionBtn" data-action="changeQuantite"><i class="fa fa-pencil" aria-hidden="true"></i> '.$quantiteReelle.'</btn></td>
 						<td>'.$prixTotalProd.' €</td>
-						<td><a href="index.php?controller=panier&action=remove&idProduit='.$idProduit.'" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Supprimer</a></td>
+						<td><btn class="btn btn-xs btn-danger actionBtn" data-action="removeProductPanier"><i class="fa fa-trash"></i> Supprimer</btn></td>
 					</tr>';
 
 					$prixTotal += $prixTotalProd;
@@ -153,7 +210,8 @@ class ControllerPanier {
 			}
 
 			$retour .= '</tbody></table></div>
-			<h3>Prix à payer : '.$prixTotal.' € TTC</h3>';
+			<h3>Prix à payer : '.$prixTotal.' € TTC</h3>
+			<script>modalActions();</script>';
 
 			return array(
 				'nbProduits' => $nbProduits,

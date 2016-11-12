@@ -87,13 +87,10 @@
 		<script src="assets/js/jquery.tablesorter.min.js"></script>
 		<script src="assets/js/jquery.metadata.js"></script>
 		<script src="assets/js/bootstrap.min.js"></script>
-		<?php 
-			// JS pour chaque objet/controller/view
-			if(file_exists("assets/js/pages/".static::$object.".js")) {
-				echo '<script src="assets/js/pages/'.static::$object.'.js"></script>';
-			}
-		?>
+
 		<script src="assets/js/script.js"></script>
+		<script src="assets/js/pages/produit.js"></script>
+		<script src="assets/js/pages/admin.js"></script>
 
 		<footer class="footer">
 			<div class="container">
@@ -108,6 +105,9 @@
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		        <h4 class="modal-title" id="monPanier">Panier actuel</h4>
+		      </div>
+		      <div class="container-fluid">
+		      	<div class="infoModal text-center"></div>
 		      </div>
 		      <div class="modal-body">
 		      	<?php 
