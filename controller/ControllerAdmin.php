@@ -288,6 +288,513 @@ class ControllerAdmin {
 		$pagetitle = 'So\'Cap - Administration - Liste des produits';
 		require File::build_path(array('view', 'view.php'));
 	}
+
+	public static function changeFavori() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idProduit'],$_POST['favori'])) {
+					$idProduit = strip_tags($_POST['idProduit']);
+					$newFavori = strip_tags($_POST['favori']);
+					$produit = ModelProduit::select($idProduit);
+
+					if($produit != false) {
+						if($produit->get('favorited') != $newFavori) {
+							$data = array(
+								'favorited' => $newFavori
+							);
+							$checkUpdate = $produit->updateFavori($newFavori);
+							if($checkUpdate) {
+								$retour['result'] = true;
+								$retour['idProduit'] = $produit->get('idProduit');
+								$retour['newFavori'] = $newFavori;
+								if($newFavori == 1) {
+									$retour['newIcon'] = '<i class="fa fa-star" aria-hidden="true"></i>';
+								} else {
+									$retour['newIcon'] = '<i class="fa fa-star-o" aria-hidden="true"></i>';
+								}
+								$retour['message'] = '<div class="alert alert-success">Favori mis à jour pour le produit selectionné !</div>';
+							} else {
+								$retour['result'] = false;
+								$retour['message'] = '<div class="alert alert-danger">Impossible de mettre à jour le produit !</div>';
+							}
+						} else {
+							$retour['result'] = false;
+							$retour['message'] = '<div class="alert alert-danger">Le produit est déjà dans l\'état souhaité !</div>';
+						}
+					} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">Le produit n\'existe pas !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	// Toutes les méthodes s'appellant nameForm permettent de récupérer un formulaire dans la modal qui est géré plus haut par le controller
+
+	public static function stockForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idProduit'])) {
+					$idProduit = strip_tags($_POST['idProduit']);
+					$produit = ModelProduit::select($idProduit);
+
+					if($produit != false) {
+						$form = '<form method="POST" role="form">
+							<div class="form-group">
+								<label for="stockActual">Stock pour le produit <u>'.strip_tags($produit->get('label')).'</u></label>
+								<input type="text" name="stock" autocomplete="off" id="stockActual" class="form-control" value="'.$produit->getStock().'" placeholder="Nombre de produits en stock" />
+							</div>
+							<input type="hidden" name="idProduit" value="'.$produit->get('idProduit').'">
+							<input type="hidden" name="actionP" value="updateStockProduit">
+							<button type="submit" class="btn btn-success">Modifier</button>
+						</form>';
+						$retour['result'] = true;
+						$retour['message'] = $form;
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">Le produit n\'existe pas !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	public static function editForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idProduit'])) {
+					$idProduit = strip_tags($_POST['idProduit']);
+					$produit = ModelProduit::select($idProduit);
+
+					if($produit != false) {
+						$categories = ModelCategorie::selectAll();
+						if($categories != false) {
+							$displayCategories = '';
+							foreach ($categories as $categorie) {
+								$idCategorie = $categorie->get('idCategorie');
+								$labelCategorie = $categorie->get('label');
+								$selected = ($idCategorie == $produit->get('categorieProduit') ? 'selected="selected"' : '');
+								$displayCategories .= '<option '.$selected.' value="'.$idCategorie.'">'.$labelCategorie.'</option>';
+							}
+						}
+						$form = '<form method="POST" role="form">
+							<div class="form-group">
+								<label for="idProduit">ID du produit</label>
+								<input type="text" autocomplete="off" id="idProduit" class="form-control" value="'.$produit->get('idProduit').'" placeholder="ID du produit" disabled="yes" />
+							</div>
+
+							<div class="form-group">
+								<label for="label">Libellé du produit</label>
+								<input type="text" name="label" autocomplete="off" id="label" class="form-control" value="'.$produit->get('label').'" placeholder="Libellé du produit" />
+							</div>
+
+							<div class="form-group">
+								<label for="categorie">Catégorie du produit</label>
+								<select id="categorie" name="categorie" class="form-control">
+									'.$displayCategories.'
+								</select>
+							</div>
+
+							<div class="form-group">
+								<label for="description">Description du produit</label>
+								<textarea class="form-control" name="description" id="description" placeholder="Description du produit">'.$produit->get('description').'</textarea>
+							</div>
+
+							<div class="form-group">
+								<label for="prix">Prix du produit</label>
+								<input type="number" name="prix" min="0" step="any" autocomplete="off" id="prix" class="form-control" value="'.$produit->get('prix').'" placeholder="Prix du produit" />
+							</div>
+
+							<input type="hidden" name="idProduit" value="'.$produit->get('idProduit').'">
+							<input type="hidden" name="actionP" value="updateProduit">
+
+							<div class="form-group">
+								<button type="submit" class="btn btn-success">Modifier</button>
+							</div>
+
+							<div class="alert alert-info text-center">
+								Pour gérer le fait que ce produit apraisse ou non en "sélection" sur le site, utilisez le bouton <b>Favori (<i class="fa fa-star-o" aria-hidden="true"></i>/<i class="fa fa-star" aria-hidden="true"></i>)</b> dans la liste des produits
+							</div>
+
+							<div class="alert alert-info text-center">
+								Pour gérer le stock de ce produit, utilisez le bouton <b>Stock (<i class="fa fa-gear" aria-hidden="true"></i>)</b> dans la liste des produits
+							</div>
+						</form>';
+						$retour['result'] = true;
+						$retour['message'] = $form;
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">Le produit n\'existe pas !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	public static function deleteForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idProduit'])) {
+					$idProduit = strip_tags($_POST['idProduit']);
+					$produit = ModelProduit::select($idProduit);
+
+					if($produit != false) {
+						$form = '<form method="POST" role="form">
+							<div class="alert alert-info text-center">
+								Confirmez vous la suppression du produi <b>'.strip_tags($produit->get('label')).'</b> ?
+							</div>
+
+							<input type="hidden" name="idProduit" value="'.$produit->get('idProduit').'">
+							<input type="hidden" name="confirm" value="true">
+							<input type="hidden" name="actionP" value="deleteProduit">
+
+							<div class="form-group">
+								<button type="submit" class="btn btn-success">Confirmer</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Annuler">Annuler</button>
+							</div>
+						</form>';
+						$retour['result'] = true;
+						$retour['message'] = $form;
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">Le produit n\'existe pas !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	public static function addProduitForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idProduit'])) {
+					$idProduit = strip_tags($_POST['idProduit']);
+					if($idProduit == "null") {
+						
+						if(isset($_POST['dataPosted'])) {
+							// Si jamais on récupère de la donnée postée précédemment (donc formulaire précédemment envoyé en erreur)
+							// On la décode vu qu'elle était encodée en JSON.
+							$dataPosted = json_decode($_POST['dataPosted']);
+						}
+
+						// On stocke des variables de value="" (pour l'HTML).
+						$labelValue = (isset($dataPosted->label) ? strip_tags($dataPosted->label) : '');
+						$descriptionValue = (isset($dataPosted->description) ? strip_tags($dataPosted->description) : '');
+						$categorieValue = (isset($dataPosted->categorie) ? strip_tags($dataPosted->categorie) : '');
+						$prixValue = (isset($dataPosted->prix) ? strip_tags($dataPosted->prix) : '');
+						$stockValue = (isset($dataPosted->stock) ? strip_tags($dataPosted->stock) : '');
+						$favoriValue = (isset($dataPosted->favori) ? strip_tags($dataPosted->favori) : '');
+
+						$categories = ModelCategorie::selectAll();
+						if($categories != false) {
+							$displayCategories = '';
+							foreach ($categories as $categorie) {
+								$idCategorie = $categorie->get('idCategorie');
+								$labelCategorie = $categorie->get('label');
+								$selected = ($idCategorie == $categorieValue ? 'selected="selected"' : '');
+								$displayCategories .= '<option '.$selected.' value="'.$idCategorie.'">'.$labelCategorie.'</option>';
+							}
+
+							$isFavoriYes = ($favoriValue == 1 && is_numeric($favoriValue)) ? 'checked' : '';
+							$isFavoriNo = ($favoriValue == 0 && is_numeric($favoriValue)) ? 'checked' : '';
+
+							$form = '<form method="POST" role="form">
+								<div class="form-group">
+									<label for="label">* Libellé du produit</label>
+									<input type="text" required name="label" autocomplete="off" id="label" value="'.$labelValue.'" class="form-control" placeholder="Libellé du produit" />
+								</div>
+
+								<div class="form-group">
+									<label for="categorie">* Catégorie du produit</label>
+									<select id="categorie" required name="categorie" class="form-control">
+										'.$displayCategories.'
+									</select>
+								</div>
+
+								<div class="form-group">
+									<label for="description">Description du produit</label>
+									<textarea class="form-control" name="description" id="description" placeholder="Description du produit">'.$descriptionValue.'</textarea>
+								</div>
+
+								<div class="form-group">
+									<label for="prix">* Prix du produit</label>
+									<input type="number" required name="prix" min="0" step="any" autocomplete="off" id="prix" value="'.$prixValue.'" class="form-control" placeholder="Prix du produit" />
+								</div>
+
+								<div class="form-group">
+									<label for="favoriOui">* Produit favori</label>
+									<label class="radio-inline" for="favoriOui">
+										<input required type="radio" name="favori" '.$isFavoriYes.' id="favoriOui" value="1"> Oui
+									</label>
+									<label class="radio-inline" for="favoriNon">
+										<input required type="radio" name="favori" '.$isFavoriNo.' id="favoriNon" value="0"> Non
+									</label>
+								</div>
+
+								<div class="form-group">
+									<label for="stock">* Stock initial</label>
+									<input type="number" required name="stock" min="0" step="1" autocomplete="off" id="stock" value="'.$stockValue.'" class="form-control" placeholder="Stock initial du produit" />
+								</div>
+
+								<input type="hidden" required name="idProduit" value="null">
+								<input type="hidden" required name="actionP" value="addProduit">
+
+								<div class="form-group">
+									<button type="submit" class="btn btn-success">Ajouter</button>
+									<button type="reset" class="btn btn-default">Réinitialiser le formulaire</button>
+								</div>
+
+								<div class="alert alert-info text-center">
+									Tous les champs marqués d\'une * sont obligatoires <br/>
+									En cas d\'erreur, le formulaire sera ré-rempli
+								</div>
+							</form>';
+							$retour['result'] = true;
+							$retour['message'] = $form;
+						} else {
+							$retour['result'] = false;
+							$retour['message'] = '<div class="alert alert-danger">Aucune catégorie n\'existe pour le moment, veuillez en ajouter avant d\'ajouter des produits</div>';
+						}
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">Ereur de transmission des données !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	public static function manageCategForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idCategorie'])) {
+					$idCategorie = strip_tags($_POST['idCategorie']);
+					if($idCategorie == "null") {
+
+						$categories = ModelCategorie::selectAll();
+						$formAdd = '<form method="POST" role="form">
+								<div class="form-group">
+									<label for="labelCategorie">Nom de la catégorie</label>
+									<input id="labelCategorie" class="form-control" type="text" name="labelCategorie" placeholder="Nom de la catégorie" />
+								</div>
+								<div class="form-group">
+									<input type="hidden" name="actionP" value="addCategorie">
+									<button type="submit" class="btn btn-success">Ajouter</button>
+								</div>
+							</form>';
+						if($categories != false) {
+							$formTable = '<div class="table-responsive">
+								<table class="table table-hover listProduitsTable">
+									<thead>
+										<tr>
+											<th>ID</th>
+											<th>Nom</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>';
+
+							foreach ($categories as $categorie) {
+								$idCategorie = $categorie->get('idCategorie');
+								$labelCategorie = $categorie->get('label');
+								$formTable .= '<tr data-categorie="'.$idCategorie.'">
+									<td>'.$idCategorie.'</td>
+									<td>'.$labelCategorie.'</td>
+									<td>
+										<btn class="btn btn-xs btn-warning actionBtn" data-action="editCategorieForm"><i class="fa fa-pencil" aria-hidden="true"></i> Editer</btn>
+										<btn class="btn btn-xs btn-danger actionBtn" data-action="deleteCategorieForm"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</btn>
+									</td>
+								</tr>';
+							}
+
+							$formTable .= '</tbody>
+								</table>
+							</div>
+							<script>actionBtn();</script>';
+
+							$retour['result'] = true;
+							$retour['message'] = $formAdd."<hr/>".$formTable;
+						} else {
+							$retour['result'] = true;
+							$retour['message'] = $formAdd;
+						}
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">Ereur de transmission des données !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	public static function editCategorieForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idCategorie'])) {
+					$idCategorie = strip_tags($_POST['idCategorie']);
+					$categorie = ModelCategorie::select($idCategorie);
+
+					if($categorie != false) {
+						$form = '<form method="POST" role="form">
+							<div class="form-group">
+								<label for="idCategorie">ID de la catégorie</label>
+								<input type="text" autocomplete="off" id="idCategorie" class="form-control" value="'.$categorie->get('idCategorie').'" placeholder="ID de de la categorie" disabled="yes" />
+							</div>
+
+							<div class="form-group">
+								<label for="label">Libellé de la catégorie</label>
+								<input type="text" name="label" autocomplete="off" id="label" class="form-control" value="'.$categorie->get('label').'" placeholder="Libellé de la catégorie" />
+							</div>
+
+							<input type="hidden" name="idCategorie" value="'.$categorie->get('idCategorie').'">
+							<input type="hidden" name="actionP" value="updateCategorie">
+
+							<div class="form-group">
+								<button type="submit" class="btn btn-success">Modifier</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Annuler">Annuler</button>
+							</div>
+						</form>';
+						$retour['result'] = true;
+						$retour['message'] = $form;
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">La catégorie demandée n\'existe pas !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	public static function deleteCategorieForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idCategorie'])) {
+					$idCategorie = strip_tags($_POST['idCategorie']);
+					$categorie = ModelCategorie::select($idCategorie);
+
+					if($categorie != false) {
+						$form = '<form method="POST" role="form">
+							<div class="alert alert-info text-center">
+								Confirmez vous la suppression de la catégorie <b>'.strip_tags($categorie->get('label')).'</b> ?
+							</div>
+
+							<input type="hidden" name="idCategorie" value="'.$categorie->get('idCategorie').'">
+							<input type="hidden" name="confirm" value="true">
+							<input type="hidden" name="actionP" value="deleteCategorie">
+
+							<div class="form-group">
+								<button type="submit" class="btn btn-success">Confirmer</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Annuler">Annuler</button>
+							</div>
+						</form>';
+						$retour['result'] = true;
+						$retour['message'] = $form;
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">La catégorie n\'existe pas !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
 }
 
 ?>
