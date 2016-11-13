@@ -13,37 +13,39 @@ $(function(){
 	});
 });
 
-$(".favori").on('click', function(e) {
-	e.preventDefault();
-	var dataFavori = $(this).attr('data-favori');
-	var dataProduit = $(this).parent().parent().attr('data-produit');
-	// Ajax
-	if(dataFavori == 1) {
-		var data = 'idProduit='+dataProduit+'&favori=0';
-	} else {
-		var data = 'idProduit='+dataProduit+'&favori=1';
-	}
-
-	$.ajax({
-		type: "POST",
-		url: "lib/ajax/admin-favori.php",
-		data: data,
-		dataType: 'json',
-		success: function(retour) {
-			$('.info').html(retour.message).fadeIn("slow");
-			if(retour.result == true) {
-				$('tr[data-produit="'+retour.idProduit+'"] td .favori').attr('data-favori', retour.newFavori);
-				$('tr[data-produit="'+retour.idProduit+'"] td .favori').html(retour.newIcon);
-			}
-			setTimeout(function(){
-				$('.info').fadeOut();
-			}, 1000);
-		},
-		error: function(retour) {
-			console.log(retour);
+function changeFavori() {
+	$(".favori").unbind('click').on('click', function(e) {
+		e.preventDefault();
+		var dataFavori = $(this).attr('data-favori');
+		var dataProduit = $(this).parent().parent().attr('data-produit');
+		// Ajax
+		if(dataFavori == 1) {
+			var data = 'idProduit='+dataProduit+'&favori=0';
+		} else {
+			var data = 'idProduit='+dataProduit+'&favori=1';
 		}
+
+		$.ajax({
+			type: "POST",
+			url: "index.php?controller=admin&action=changeFavori",
+			data: data,
+			dataType: 'json',
+			success: function(retour) {
+				$('.info').html(retour.message).fadeIn("slow");
+				if(retour.result == true) {
+					$('tr[data-produit="'+retour.idProduit+'"] td .favori').attr('data-favori', retour.newFavori);
+					$('tr[data-produit="'+retour.idProduit+'"] td .favori').html(retour.newIcon);
+				}
+				setTimeout(function(){
+					$('.info').fadeOut();
+				}, 1000);
+			},
+			error: function(retour) {
+				console.log(retour);
+			}
+		});
 	});
-});
+}
 
 function actionBtn() {
 	$(".actionBtn").unbind('click').on("click", function(e){
@@ -114,4 +116,9 @@ function actionBtn() {
 	});
 }
 
-actionBtn();
+function init() {
+	actionBtn();
+	changeFavori();
+}
+
+init();
