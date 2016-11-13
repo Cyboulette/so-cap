@@ -56,16 +56,16 @@ function actionBtn() {
 			var idProduit = $(this).parent().parent().attr('data-produit');
 			var dataToPost = 'idProduit='+idProduit;
 			if(action == "stockForm") {
-				var urlToPost  = "lib/ajax/admin-getStockProduit.php";
+				//var urlToPost  = "lib/ajax/admin-getStockProduit.php";
 				var titleModal = "Modifier le stock d'un produit";
 			} else if(action == "editForm") {
-				var urlToPost = "lib/ajax/admin-getProduitForm.php";
+				//var urlToPost = "lib/ajax/admin-getProduitForm.php";
 				var titleModal = "Modifier un produit";
 			} else if(action == "deleteForm") {
-				var urlToPost = "lib/ajax/admin-deleteProduitForm.php";
+				//var urlToPost = "lib/ajax/admin-deleteProduitForm.php";
 				var titleModal = "Supprimer un produit";
 			} else if(action == "addProduitForm") {
-				var urlToPost = "lib/ajax/admin-addProduitForm.php";
+				//var urlToPost = "lib/ajax/admin-addProduitForm.php";
 				var titleModal = "Ajouter un produit";
 				if(typeof dataPosted !== 'undefined') {
 					// Si jamais on a déjà tenté d'envoyer le formulaire mais qu'il y avait une erreur on renvoit les données
@@ -78,21 +78,22 @@ function actionBtn() {
 				// idProduit doit valoir null pour vérifier l'intégrité des données du côté du PHP (au cas ou un malin s'amsuserait à modifier le form)
 			} else if(action == "manageCateg") {
 				var titleModal = "Gérer les catégories";
-				var urlToPost = "lib/ajax/admin-listCategories.php";
+				//var urlToPost = "lib/ajax/admin-listCategories.php";
 				dataToPost = 'idCategorie=null';
 			} else if(action == "editCategorie") {
 				var idCategorie = $(this).parent().parent().attr('data-categorie');
 				var titleModal = "Editer une catégorie";
-				var urlToPost = "lib/ajax/admin-getCategorieForm.php";
+				//var urlToPost = "lib/ajax/admin-getCategorieForm.php";
 				dataToPost = 'idCategorie='+encodeURIComponent(idCategorie);
 			} else if(action == "deleteCategorie") {
 				var idCategorie = $(this).parent().parent().attr('data-categorie');
 				var titleModal = "Supprimer une catégorie";
-				var urlToPost = "lib/ajax/admin-deleteCategorie.php";
+				//var urlToPost = "lib/ajax/admin-deleteCategorie.php";
 				dataToPost = 'idCategorie='+encodeURIComponent(idCategorie);
 			} else {
-				urlToPost = null;
+				action = null;
 			}
+			
 			$(".modal-form-content").html('<div class="loader"></div><br/><div class="text-center"><em>Chargement en cours</em></div>');
 			$("#modalProduit .modal-title").html(titleModal);
 			if(action != "editCategorie" && action != "deleteCategorie") {
@@ -101,7 +102,7 @@ function actionBtn() {
 
 			$.ajax({
 				type: "POST",
-				url: urlToPost,
+				url: 'index.php?controller=admin&action='+action,
 				data: dataToPost,
 				dataType: 'json',
 				success: function(retour) {
