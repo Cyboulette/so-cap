@@ -72,14 +72,14 @@ function actionBtn() {
 					dataToPost = 'idProduit=null';
 				}
 				// idProduit doit valoir null pour vérifier l'intégrité des données du côté du PHP (au cas ou un malin s'amsuserait à modifier le form)
-			} else if(action == "manageCateg") {
+			} else if(action == "manageCategForm") {
 				var titleModal = "Gérer les catégories";
 				dataToPost = 'idCategorie=null';
-			} else if(action == "editCategorie") {
+			} else if(action == "editCategorieForm") {
 				var idCategorie = $(this).parent().parent().attr('data-categorie');
 				var titleModal = "Editer une catégorie";
 				dataToPost = 'idCategorie='+encodeURIComponent(idCategorie);
-			} else if(action == "deleteCategorie") {
+			} else if(action == "deleteCategorieForm") {
 				var idCategorie = $(this).parent().parent().attr('data-categorie');
 				var titleModal = "Supprimer une catégorie";
 				dataToPost = 'idCategorie='+encodeURIComponent(idCategorie);
@@ -89,7 +89,7 @@ function actionBtn() {
 
 			$(".modal-form-content").html('<div class="loader"></div><br/><div class="text-center"><em>Chargement en cours</em></div>');
 			$("#modalProduit .modal-title").html(titleModal);
-			if(action != "editCategorie" && action != "deleteCategorie") {
+			if(action != "editCategorieForm" && action != "deleteCategorieForm") {
 				$('#modalProduit').modal('toggle');
 			}
 

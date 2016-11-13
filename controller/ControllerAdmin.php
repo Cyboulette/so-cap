@@ -624,6 +624,177 @@ class ControllerAdmin {
 		}
 		echo json_encode($retour);
 	}
+
+	public static function manageCategForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idCategorie'])) {
+					$idCategorie = strip_tags($_POST['idCategorie']);
+					if($idCategorie == "null") {
+
+						$categories = ModelCategorie::selectAll();
+						$formAdd = '<form method="POST" role="form">
+								<div class="form-group">
+									<label for="labelCategorie">Nom de la catégorie</label>
+									<input id="labelCategorie" class="form-control" type="text" name="labelCategorie" placeholder="Nom de la catégorie" />
+								</div>
+								<div class="form-group">
+									<input type="hidden" name="actionP" value="addCategorie">
+									<button type="submit" class="btn btn-success">Ajouter</button>
+								</div>
+							</form>';
+						if($categories != false) {
+							$formTable = '<div class="table-responsive">
+								<table class="table table-hover listProduitsTable">
+									<thead>
+										<tr>
+											<th>ID</th>
+											<th>Nom</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>';
+
+							foreach ($categories as $categorie) {
+								$idCategorie = $categorie->get('idCategorie');
+								$labelCategorie = $categorie->get('label');
+								$formTable .= '<tr data-categorie="'.$idCategorie.'">
+									<td>'.$idCategorie.'</td>
+									<td>'.$labelCategorie.'</td>
+									<td>
+										<btn class="btn btn-xs btn-warning actionBtn" data-action="editCategorieForm"><i class="fa fa-pencil" aria-hidden="true"></i> Editer</btn>
+										<btn class="btn btn-xs btn-danger actionBtn" data-action="deleteCategorieForm"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</btn>
+									</td>
+								</tr>';
+							}
+
+							$formTable .= '</tbody>
+								</table>
+							</div>
+							<script>actionBtn();</script>';
+
+							$retour['result'] = true;
+							$retour['message'] = $formAdd."<hr/>".$formTable;
+						} else {
+							$retour['result'] = true;
+							$retour['message'] = $formAdd;
+						}
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">Ereur de transmission des données !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	public static function editCategorieForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idCategorie'])) {
+					$idCategorie = strip_tags($_POST['idCategorie']);
+					$categorie = ModelCategorie::select($idCategorie);
+
+					if($categorie != false) {
+						$form = '<form method="POST" role="form">
+							<div class="form-group">
+								<label for="idCategorie">ID de la catégorie</label>
+								<input type="text" autocomplete="off" id="idCategorie" class="form-control" value="'.$categorie->get('idCategorie').'" placeholder="ID de de la categorie" disabled="yes" />
+							</div>
+
+							<div class="form-group">
+								<label for="label">Libellé de la catégorie</label>
+								<input type="text" name="label" autocomplete="off" id="label" class="form-control" value="'.$categorie->get('label').'" placeholder="Libellé de la catégorie" />
+							</div>
+
+							<input type="hidden" name="idCategorie" value="'.$categorie->get('idCategorie').'">
+							<input type="hidden" name="actionP" value="updateCategorie">
+
+							<div class="form-group">
+								<button type="submit" class="btn btn-success">Modifier</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Annuler">Annuler</button>
+							</div>
+						</form>';
+						$retour['result'] = true;
+						$retour['message'] = $form;
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">La catégorie demandée n\'existe pas !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	public static function deleteCategorieForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idCategorie'])) {
+					$idCategorie = strip_tags($_POST['idCategorie']);
+					$categorie = ModelCategorie::select($idCategorie);
+
+					if($categorie != false) {
+						$form = '<form method="POST" role="form">
+							<div class="alert alert-info text-center">
+								Confirmez vous la suppression de la catégorie <b>'.strip_tags($categorie->get('label')).'</b> ?
+							</div>
+
+							<input type="hidden" name="idCategorie" value="'.$categorie->get('idCategorie').'">
+							<input type="hidden" name="confirm" value="true">
+							<input type="hidden" name="actionP" value="deleteCategorie">
+
+							<div class="form-group">
+								<button type="submit" class="btn btn-success">Confirmer</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Annuler">Annuler</button>
+							</div>
+						</form>';
+						$retour['result'] = true;
+						$retour['message'] = $form;
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">La catégorie n\'existe pas !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
 }
 
 ?>
