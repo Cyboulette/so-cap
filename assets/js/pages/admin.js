@@ -1,3 +1,5 @@
+// Changer le code pour ne plus passer par lib/ajax
+
 $(function(){
 	$(".listProduitsTable").tablesorter({
 		headers: {
