@@ -12,7 +12,7 @@
 	<div class="alert alert-info">Un produit en <b>favori</b> apparaîtra dans l'onglet "Notre sélection" des produits</div>
 	<div class="form-group text-center">
 		<btn class="btn btn-success btn-xs actionBtn" data-action="addProduitForm"><i class="fa fa-plus" aria-hidden="true"></i> Ajouter un produit</btn>
-		<btn class="btn btn-warning btn-xs actionBtn" data-action="manageCateg"><i class="fa fa-cog" aria-hidden="true"></i> Gérer les catégories</btn>
+		<btn class="btn btn-warning btn-xs actionBtn" data-action="manageCategForm"><i class="fa fa-cog" aria-hidden="true"></i> Gérer les catégories</btn>
 		<a href="index.php?controller=admin&action=listProduits" class="btn btn-xs btn-primary"><i class="fa fa-refresh" aria-hidden="true"></i> Rafraichir</a>
 	</div>
 	<div class="row">
