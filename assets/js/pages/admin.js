@@ -43,57 +43,73 @@ $(".favori").on('click', function(e) {
 	});
 });
 
-$(".actionBtn").on("click", function(e){
-	e.preventDefault();
-	var action = $(this).attr('data-action');
+function actionBtn() {
+	$(".actionBtn").unbind('click').on("click", function(e){
+		e.preventDefault();
+		var action = $(this).attr('data-action');
 
-	if(action != undefined) {
-		var idProduit = $(this).parent().parent().attr('data-produit');
-		var dataToPost = 'idProduit='+idProduit;
-		if(action == "stockForm") {
-			var urlToPost  = "lib/ajax/admin-getStockProduit.php";
-			var titleModal = "Modifier le stock d'un produit";
-		} else if(action == "editForm") {
-			var urlToPost = "lib/ajax/admin-getProduitForm.php";
-			var titleModal = "Modifier un produit";
-		} else if(action == "deleteForm") {
-			var urlToPost = "lib/ajax/admin-deleteProduitForm.php";
-			var titleModal = "Supprimer un produit";
-		} else if(action == "addProduitForm") {
-			var urlToPost = "lib/ajax/admin-addProduitForm.php";
-			var titleModal = "Ajouter un produit";
-			if(typeof dataPosted !== 'undefined') {
-				// Si jamais on a déjà tenté d'envoyer le formulaire mais qu'il y avait une erreur on renvoit les données
-				// On les encode en JSON pour pouvoir les transmettre correctement et en sécurité !
-				dataToPost = 'idProduit=null'+"&dataPosted="+JSON.stringify(dataPosted);
+		if(action != undefined) {
+			var idProduit = $(this).parent().parent().attr('data-produit');
+			var dataToPost = 'idProduit='+idProduit;
+			if(action == "stockForm") {
+				var urlToPost  = "lib/ajax/admin-getStockProduit.php";
+				var titleModal = "Modifier le stock d'un produit";
+			} else if(action == "editForm") {
+				var urlToPost = "lib/ajax/admin-getProduitForm.php";
+				var titleModal = "Modifier un produit";
+			} else if(action == "deleteForm") {
+				var urlToPost = "lib/ajax/admin-deleteProduitForm.php";
+				var titleModal = "Supprimer un produit";
+			} else if(action == "addProduitForm") {
+				var urlToPost = "lib/ajax/admin-addProduitForm.php";
+				var titleModal = "Ajouter un produit";
+				if(typeof dataPosted !== 'undefined') {
+					// Si jamais on a déjà tenté d'envoyer le formulaire mais qu'il y avait une erreur on renvoit les données
+					// On les encode en JSON pour pouvoir les transmettre correctement et en sécurité !
+					dataToPost = 'idProduit=null'+"&dataPosted="+JSON.stringify(dataPosted);
+				} else {
+					// Sinon notre variable ne bouge pas
+					dataToPost = 'idProduit=null';
+				}
+				// idProduit doit valoir null pour vérifier l'intégrité des données du côté du PHP (au cas ou un malin s'amsuserait à modifier le form)
+			} else if(action == "manageCateg") {
+				var titleModal = "Gérer les catégories";
+				var urlToPost = "lib/ajax/admin-listCategories.php";
+				dataToPost = 'idCategorie=null';
+			} else if(action == "editCategorie") {
+				var idCategorie = $(this).parent().parent().attr('data-categorie');
+				var titleModal = "Editer une catégorie";
+				var urlToPost = "lib/ajax/admin-editCategorie.php";
+				dataToPost = 'idCategorie='+encodeURIComponent(idCategorie);
+			} else if(action == "deleteCategorie") {
+				var idCategorie = $(this).parent().parent().attr('data-categorie');
+				var titleModal = "Supprimer une catégorie";
+				var urlToPost = "lib/ajax/admin-deleteCategorie.php";
+				dataToPost = 'idCategorie='+encodeURIComponent(idCategorie);
 			} else {
-				// Sinon notre variable ne bouge pas
-				dataToPost = 'idProduit=null';
+				urlToPost = null;
 			}
-			// idProduit doit valoir null pour vérifier l'intégrité des données du côté du PHP (au cas ou un malin s'amsuserait à modifier le form)
-		} else if(action == "manageCateg") {
-			var titleModal = "Gérer les catégories";
-			var urlToPost = "lib/ajax/admin-listCategories.php";
-			dataToPost = 'idCategorie=null';
-		} else {
-			urlToPost = null;
-		}
-		$(".modal-form-content").html('<div class="loader"></div><br/><div class="text-center"><em>Chargement en cours</em></div>');
-		$("#modalProduit .modal-title").html(titleModal);
-		$('#modalProduit').modal('toggle');
+			$(".modal-form-content").html('<div class="loader"></div><br/><div class="text-center"><em>Chargement en cours</em></div>');
+			$("#modalProduit .modal-title").html(titleModal);
+			if(action != "editCategorie" && action != "deleteCategorie") {
+				$('#modalProduit').modal('toggle');
+			}
 
-		$.ajax({
-			type: "POST",
-			url: urlToPost,
-			data: dataToPost,
-			dataType: 'json',
-			success: function(retour) {
-				console.log(retour);
-				$(".modal-form-content").html(retour.message);
-			},
-			error: function(retour) {
-				console.log(retour);
-			}
-		});
-	}
-});
+			$.ajax({
+				type: "POST",
+				url: urlToPost,
+				data: dataToPost,
+				dataType: 'json',
+				success: function(retour) {
+					console.log(retour);
+					$(".modal-form-content").html(retour.message);
+				},
+				error: function(retour) {
+					console.log(retour);
+				}
+			});
+		}
+	});
+}
+
+actionBtn();

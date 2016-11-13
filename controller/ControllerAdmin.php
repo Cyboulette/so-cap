@@ -227,6 +227,30 @@ class ControllerAdmin {
 						} else {
 							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
 						}
+						break;
+					case 'deleteCategorie':
+						if(isset($_POST['idCategorie'],$_POST['confirm'])) {
+							$idCategorie = strip_tags($_POST['idCategorie']);
+							$categorie = ModelCategorie::select($idCategorie);
+							if($categorie != false) {
+								$confirm = strip_tags($_POST['confirm']);
+								if($confirm == true) {
+									$checkDeleteCategorie = ModelCategorie::delete($categorie->get('idCategorie'));
+									if($checkDeleteCategorie) {
+										$notif = '<div class="alert alert-success">La catégorie a bien été supprimée !</div>';
+									} else {
+										$notif = '<div class="alert alert-danger">Impossible de supprimer cette catégorie, elle doit certainement contenir des produits !</div>';
+									}
+								} else {
+									$notif = '<div class="alert alert-danger">Vous devez confirmer la suppression !</div>';
+								}
+							} else {
+								$notif = '<div class="alert alert-danger">La catégorie demandée n\'existe pas !</div>';
+							}
+						} else {
+							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
+						}
+						break;
 					default:
 						break;
 				}

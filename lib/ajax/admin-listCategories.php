@@ -29,23 +29,34 @@
 							</div>
 						</form>';
 					if($categories != false) {
-						$displayCategories = '';
-						foreach ($categories as $categorie) {
-							$idCategorie = $categorie->get('idCategorie');
-							$labelCategorie = $categorie->get('label');
-							$displayCategories .= '<option value="'.$idCategorie.'">'.$labelCategorie.'</option>';
-						}
-
 						$formTable = '<div class="table-responsive">
 							<table class="table table-hover listProduitsTable">
 								<thead>
 									<tr>
 										<th>ID</th>
 										<th>Nom</th>
+										<th>Action</th>
 									</tr>
 								</thead>
+								<tbody>';
+
+						foreach ($categories as $categorie) {
+							$idCategorie = $categorie->get('idCategorie');
+							$labelCategorie = $categorie->get('label');
+							$formTable .= '<tr data-categorie="'.$idCategorie.'">
+								<td>'.$idCategorie.'</td>
+								<td>'.$labelCategorie.'</td>
+								<td>
+									<btn class="btn btn-xs btn-warning actionBtn" data-action="editCategorie"><i class="fa fa-pencil" aria-hidden="true"></i> Editer</btn>
+									<btn class="btn btn-xs btn-danger actionBtn" data-action="deleteCategorie"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</btn>
+								</td>
+							</tr>';
+						}
+
+						$formTable .= '</tbody>
 							</table>
-						</div>';
+						</div>
+						<script>actionBtn();</script>';
 
 						$retour['result'] = true;
 						$retour['message'] = $formAdd."<hr/>".$formTable;
