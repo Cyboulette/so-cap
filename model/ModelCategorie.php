@@ -40,5 +40,24 @@ class ModelCategorie extends Model {
 			die();
 		}
 	}
+
+	public function update($data) {
+		try {
+			$sql = 'UPDATE `'.static::$tableName.'` SET label = :label WHERE idCategorie = :idCategorie';
+			$updateCategorie = Model::$pdo->prepare($sql);
+			$data = array(
+				'label' => $data['label'],
+				'idCategorie' => $this->idCategorie
+			);
+			$updateCategorie->execute($data);
+			return true;
+		} catch(PDOException $e) {
+			if(Conf::getDebug()) {
+				echo $e->getMessage();
+			}
+			return false;
+			die();
+		}
+	}
 }
 ?>

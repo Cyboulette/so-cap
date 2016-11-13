@@ -228,6 +228,33 @@ class ControllerAdmin {
 							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
 						}
 						break;
+					case 'updateCategorie':
+						if(isset($_POST['idCategorie'],$_POST['label'])) {
+							$idCategorie = strip_tags($_POST['idCategorie']);
+							$categorie = ModelCategorie::select($idCategorie);
+							if($categorie != false) {
+								$label = strip_tags($_POST['label']);
+								if(!empty($label) && !ctype_space($label)) {
+									$data = array(
+										'label' => $label,
+									);
+
+									$checkUpdateCategorie = $categorie->update($data);
+									if($checkUpdateCategorie) {
+										$notif = '<div class="alert alert-success">La catégorie a bien été mise à jour !</div>';
+									} else {
+										$notif = '<div class="alert alert-danger">Impossible de mettre à jour cette catégorie !</div>';
+									}
+								} else {
+									$notif = '<div class="alert alert-danger">Le nom de la catégorie ne peut être vide !</div>';
+								}
+							} else {
+								$notif = '<div class="alert alert-danger">La catégorie demandée n\'existe pas !</div>';
+							}
+						} else {
+							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
+						}
+						break;
 					case 'deleteCategorie':
 						if(isset($_POST['idCategorie'],$_POST['confirm'])) {
 							$idCategorie = strip_tags($_POST['idCategorie']);

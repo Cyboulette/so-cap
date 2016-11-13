@@ -79,7 +79,7 @@ function actionBtn() {
 			} else if(action == "editCategorie") {
 				var idCategorie = $(this).parent().parent().attr('data-categorie');
 				var titleModal = "Editer une catégorie";
-				var urlToPost = "lib/ajax/admin-editCategorie.php";
+				var urlToPost = "lib/ajax/admin-getCategorieForm.php";
 				dataToPost = 'idCategorie='+encodeURIComponent(idCategorie);
 			} else if(action == "deleteCategorie") {
 				var idCategorie = $(this).parent().parent().attr('data-categorie');
