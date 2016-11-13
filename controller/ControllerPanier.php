@@ -11,40 +11,6 @@ class ControllerPanier {
 		}
 	}
 
-	public function add($idProduit, $quantite) {
-		$produit = ModelProduit::select($idProduit);
-
-		if($produit != false) {
-			if($produit->getStock() != 0) {
-				if(is_numeric($quantite) && $quantite > 0) {
-					$idProduit = $produit->get('idProduit');
-
-					if(isset($_SESSION['panier'][$idProduit])) {
-						$quantiteTotale = $_SESSION['panier'][$idProduit] + $quantite;
-					} else {
-						$quantiteTotale = $quantite;
-					}
-
-					if($quantiteTotale <= $produit->getStock()) {
-						$_SESSION['panier'][$idProduit] = $quantiteTotale;
-						$view = 'addCart';
-						$pagetitle= 'So\'Cap - Achat d\'un produit';
-						$powerNeeded = true;
-						require File::build_path(array('view', 'view.php'));
-					} else {
-						ModelProduit::error("Vous ne pouvez pas dépasser le stock maximal de produits");
-					}
-				} else {
-					ModelProduit::error("La quantité doit être supérieure à 0");
-				}
-			} else {
-				ModelProduit::error("Impossible d'ajouter ce produit au panier, nous ne l'avons plus en stock");
-			}
-		} else {
-			ModelProduit::error("Ce produit n'est pas disponible à l'ajout dans votre panier !");
-		}
-	}
-
 	public static function addFromAjax() {
 		$retour = array();
 		if(isset($_POST['idProduit'], $_POST['quantite'])) {
@@ -88,6 +54,21 @@ class ControllerPanier {
 		} else {
 			$retour['result'] = false;
 			$retour['message'] = '<div class="alert alert-danger">Vous devez préciser un produit et une quantité</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	public static function clearPanier() {
+		$retour = array();
+		if(isset($_SESSION['panier'])) {
+			unset($_SESSION['panier']);
+			$retour['result'] = true;
+			$retour['nbProduits'] = self::nombreProduits();
+			$retour['nouveauPanier'] = self::afficherPanier();
+			$retour['message'] = '<div class="alert alert-success">Le panier a bien été vidé !</div>';
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Impossible de vider votre panier, il était déjà vide</div>';
 		}
 		echo json_encode($retour);
 	}
@@ -199,9 +180,9 @@ class ControllerPanier {
 						<td>'.$idProduit.'</td>
 						<td><a href="index.php?controller=produit&action=read&idProduit='.$idProduit.'">'.$nomProduit.'</a></td>
 						<td>'.$prixUnitaire.' €</td>
-						<td><btn class="btn btn-xs btn-default actionBtn" data-action="changeQuantite"><i class="fa fa-pencil" aria-hidden="true"></i> '.$quantiteReelle.'</btn></td>
+						<td><btn class="btn btn-xs btn-default actionBtnPanier" data-action="changeQuantite"><i class="fa fa-pencil" aria-hidden="true"></i> '.$quantiteReelle.'</btn></td>
 						<td>'.$prixTotalProd.' €</td>
-						<td><btn class="btn btn-xs btn-danger actionBtn" data-action="removeProductPanier"><i class="fa fa-trash"></i> Supprimer</btn></td>
+						<td><btn class="btn btn-xs btn-danger actionBtnPanier" data-action="removeProductPanier"><i class="fa fa-trash"></i> Supprimer</btn></td>
 					</tr>';
 
 					$prixTotal += $prixTotalProd;

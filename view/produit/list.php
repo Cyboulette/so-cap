@@ -66,7 +66,7 @@
 
 				<div class="buttons">
 					<a href="?controller=produit&action=read&idProduit=<?=$idProduit?>" class="btn btn-primary btn-xs"><i class="fa fa-search" aria-hidden="true"></i> Voir le détail</a>
-					<button class="addCart btn <?=$disabledAchat?> btn-xs" data-produit="<?=$idProduit?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Ajouter au panier</button>
+					<button class="actionBtnPanier btn <?=$disabledAchat?> btn-xs" data-action="addFromAjax" data-produit="<?=$idProduit?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Ajouter au panier</button>
 				</div>
 			</div>
 		</div>

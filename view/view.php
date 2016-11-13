@@ -106,9 +106,6 @@
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		        <h4 class="modal-title" id="monPanier">Panier actuel</h4>
 		      </div>
-		      <div class="container-fluid">
-		      	<div class="infoModal text-center"></div>
-		      </div>
 		      <div class="modal-body">
 		      	<?php 
 		      		$panier = ControllerPanier::afficherPanier();
@@ -117,9 +114,8 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-		        <?php if($panier['nbProduits'] > 0) { ?>
-		        	<button type="button" class="btn btn-primary">Passer au paiement >></button>
-		        <?php } ?>
+		        <button type="button" class="clearPanier actionBtnPanier btn btn-danger" data-action="clearPanier">Vider le panier</button>
+		        <button type="button" class="goPaiement btn btn-primary">Passer au paiement >></button>
 		      </div>
 		    </div>
 		  </div>

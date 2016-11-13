@@ -1,3 +1,14 @@
+/**
+	Pourquoi mettre des function() ? ->
+		Si l'on effectue un appel ajax qui a besoin de ré-utiliser le code JS parent, celui-ci n'est plus "actif" il faut donc le "ré-armer" en ré-exécutant les functions.
+		Il faut donc dans le code html de retour exécuter un <script>function();</script> pour que l'html de retour puisse utiliser la function();
+
+	Pourquoi .unbind ? ->
+		A cause du "problème" ci-dessus, si l'on rappelle le code en exécutant un <script>function();</script> et que cette fonction bindait déjà un évenement (click, submit, hover etc.), il sera
+		bindé autant de fois que d'appel de celui-ci.
+		Le unbind, permet d'annuler l'écoute des précédents évenèments et de redémarrer à 0.
+**/
+
 function triProduits() {
 	$("#navigationProduits ul li a").unbind('click').on('click', function(e) {
 		e.preventDefault();
@@ -76,33 +87,52 @@ function rechercheForm() {
 	});
 }
 
-function addCartClick() {
-	$(".addCart").unbind('click').on('click', function(e) {
+function modalActions() {
+	$('.actionBtnPanier').unbind('click').on('click', function(e) {
 		e.preventDefault();
-		var nbProduitsPanierActuel = parseInt($('.nbProduitsPanier').text());
-		var idProduit = $(this).attr('data-produit');
-		var quantite = $('.quantite').val();
 
-		if(typeof quantite == "undefined") {
-			quantite = 1;
+		var idProduit = $(this).parent().parent().attr('data-produit');
+		var action = $(this).attr('data-action');
+
+		var data = 'idProduit='+encodeURIComponent(idProduit);
+
+		if(action == "changeQuantite") {
+			var actualQuantite = parseInt($(this).text());
+			var nouvelleQuantite = prompt("Entrez la quantité désirée", actualQuantite);
+			if($.isNumeric(nouvelleQuantite) && nouvelleQuantite >= 0) {
+				data += '&quantite='+encodeURIComponent(nouvelleQuantite);
+			}
+		} else if(action == "addFromAjax") {
+			var nbProduitsPanierActuel = parseInt($('.nbProduitsPanier').text());
+			var idProduit = $(this).attr('data-produit');
+			var quantite = $('.quantite').val();
+
+			if(typeof quantite == "undefined") {
+				quantite = 1;
+			}
+
+			var data = 'idProduit='+encodeURIComponent(idProduit)+'&quantite='+encodeURIComponent(quantite);
 		}
-
-		var data = 'idProduit='+encodeURIComponent(idProduit)+'&quantite='+encodeURIComponent(quantite);
 
 		$.ajax({
 			type: "POST",
-			url: "index.php?controller=panier&action=addFromAjax",
+			url: "index.php?controller=panier&action="+action,
 			data: data,
 			dataType: 'json',
-			async: true,
 			success: function(retour) {
-				console.log(retour);
 				$('.info').html(retour.message).fadeIn("slow");
-				
+
 				if(retour.result == true) {
 					$('.nbProduitsPanier').addClass('nbProduitsPanierNew');
 					$('.nbProduitsPanier').text(retour.nbProduits);
 					$('#panier .modal-body').html(retour.nouveauPanier.message);
+					if(retour.nbProduits == 0) {
+						$('.goPaiement').hide();
+						$('.clearPanier').hide();
+					} else {
+						$('.goPaiement').show();
+						$('.clearPanier').show();
+					}
 				}
 
 				setTimeout(function(){
@@ -117,54 +147,19 @@ function addCartClick() {
 	});
 }
 
-function modalActions() {
-	$('.actionBtn').unbind('click').on('click', function(e) {
-		e.preventDefault();
-
-		var idProduit = $(this).parent().parent().attr('data-produit');
-		var action = $(this).attr('data-action');
-
-		var data = 'idProduit='+encodeURIComponent(idProduit);
-
-		if(action == "changeQuantite") {
-			var actualQuantite = parseInt($(this).text());
-			var nouvelleQuantite = prompt("Entrez la quantité désirée", actualQuantite);
-			if($.isNumeric(nouvelleQuantite) && nouvelleQuantite > 0) {
-				data += '&quantite='+encodeURIComponent(nouvelleQuantite);
-			}
-		}
-
-		$.ajax({
-			type: "POST",
-			url: "index.php?controller=panier&action="+action,
-			data: data,
-			dataType: 'json',
-			success: function(retour) {
-				$('.infoModal').html(retour.message).fadeIn("slow");
-
-				if(retour.result == true) {
-					$('.nbProduitsPanier').addClass('nbProduitsPanierNew');
-					$('.nbProduitsPanier').text(retour.nbProduits);
-					$('#panier .modal-body').html(retour.nouveauPanier.message);
-				}
-
-				setTimeout(function(){
-					$('.nbProduitsPanier').removeClass('nbProduitsPanierNew');
-					$('.infoModal').fadeOut();
-				}, 1000);
-			},
-			error: function(retour) {
-				console.log(retour);
-			}
-		});
-	});
-}
-
 function init() {
 	triProduits();
 	rechercheForm();
-	addCartClick();
 	modalActions();
+
+	var nbProduitsPanierActuel = parseInt($('.nbProduitsPanier').text());
+	if(nbProduitsPanierActuel > 0) {
+		$('.goPaiement').show();
+		$('.clearPanier').show();
+	} else {
+		$('.goPaiement').hide();
+		$('.clearPanier').hide();
+	}
 }
 
 $(function() {

@@ -68,7 +68,7 @@ $stockMin = ($p->getStock() == 0 ? '0' : '1');
 					<button type="button" class="btn btn-default btn-sm btn-number" data-type="plus" data-field="quant[1]">
 						<span class="glyphicon glyphicon-plus"></span>
 					</button>
-					<button class="addCart btn <?=$disabledAchat?> btn-sm" data-produit="<?=$idProduit?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Ajouter au panier</button>
+					<button class="actionBtnPanier btn <?=$disabledAchat?> btn-sm" data-action="addFromAjax" data-produit="<?=$idProduit?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Ajouter au panier</button>
 				</div>
 			</div>
 		</div>

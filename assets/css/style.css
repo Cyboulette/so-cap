@@ -196,17 +196,16 @@ body {
 	display: inline-block;
 }
 
+.goPaiement, .clearPanier {
+	display: none;
+}
+
 .info {
 	display: none;
 	position: absolute;
 	top: 90px;
 	right: 10px;
 	z-index: 10000;
-}
-
-.infoModal {
-	margin-top: 10px;
-	display: none;
 }
 
 .notif {
