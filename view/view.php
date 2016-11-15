@@ -82,22 +82,6 @@
 			}
 		?>
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-		<script src="assets/js/jquery.matchHeight.js"></script>
-		<script src="assets/js/jquery.tablesorter.min.js"></script>
-		<script src="assets/js/jquery.metadata.js"></script>
-		<script src="assets/js/bootstrap.min.js"></script>
-
-		<script src="assets/js/script.js"></script>
-		<script src="assets/js/pages/produit.js"></script>
-		<script src="assets/js/pages/admin.js"></script>
-
-		<footer class="footer">
-			<div class="container">
-				<p class="text-muted">So'Cap 2016-2017 - Tous droits réservés.</p>
-			</div>
-		</footer>
-
 		<!-- Modal -->
 		<div class="modal fade" id="panier" tabindex="-1" role="dialog" aria-labelledby="monPanier">
 		  <div class="modal-dialog modal-lg" role="document">
@@ -120,5 +104,21 @@
 		    </div>
 		  </div>
 		</div>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="assets/js/jquery.matchHeight.js"></script>
+		<script src="assets/js/jquery.tablesorter.min.js"></script>
+		<script src="assets/js/jquery.metadata.js"></script>
+		<script src="assets/js/bootstrap.min.js"></script>
+
+		<script src="assets/js/script.js"></script>
+		<script src="assets/js/pages/produit.js"></script>
+		<script src="assets/js/pages/admin.js"></script>
+
+		<footer class="footer">
+			<div class="container">
+				<p class="text-muted">So'Cap 2016-2017 - Tous droits réservés.</p>
+			</div>
+		</footer>
 	</body>
 </html>
