@@ -176,7 +176,7 @@ class ControllerPanier {
 
 					$prixTotalProd = $quantiteReelle * $prixUnitaire;
 
-					$retour .= '<tr data-produit="'.$idProduit.'">
+					$retour .= '<tr data-produit="'.$idProduit.'" data-stock="'.$produit->getStock().'">
 						<td>'.$idProduit.'</td>
 						<td><a href="index.php?controller=produit&action=read&idProduit='.$idProduit.'">'.$nomProduit.'</a></td>
 						<td>'.$prixUnitaire.' €</td>

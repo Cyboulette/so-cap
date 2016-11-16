@@ -97,8 +97,9 @@ function modalActions() {
 		var data = 'idProduit='+encodeURIComponent(idProduit);
 
 		if(action == "changeQuantite") {
+			var maxStock = parseInt($(this).parent().parent().attr('data-stock'));
 			var actualQuantite = parseInt($(this).text());
-			var nouvelleQuantite = prompt("Entrez la quantité désirée", actualQuantite);
+			var nouvelleQuantite = prompt("Entrez la quantité désirée (Max : "+maxStock+")", actualQuantite);
 			if($.isNumeric(nouvelleQuantite) && nouvelleQuantite >= 0) {
 				data += '&quantite='+encodeURIComponent(nouvelleQuantite);
 			}
