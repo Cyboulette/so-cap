@@ -192,7 +192,7 @@ class ControllerPanier {
 
 			$retour .= '</tbody></table></div>
 			<h3>Prix à payer : '.$prixTotal.' € TTC</h3>
-			<script>modalActions();</script>';
+			<script>var fn = window[\'modalActions\'];  if (typeof fn === \'function\') { modalActions(); }</script>';
 
 			return array(
 				'nbProduits' => $nbProduits,
