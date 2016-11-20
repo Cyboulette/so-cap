@@ -289,6 +289,42 @@ class ControllerAdmin {
 							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
 						}
 						break;
+					case 'addImage':
+						$image = $_FILES['image'];
+						if(isset($_POST['idProduit']) && !empty($image['name'])) {
+							$idProduit = strip_tags($_POST['idProduit']);
+							$produit = ModelProduit::select($idProduit);
+							if($produit != false) {
+								$extensionsOK = array('jpg', 'jpeg', 'gif', 'png');
+								$extensionUpload = strtolower(substr(strrchr($image['name'], '.'), 1));
+								if (in_array($extensionUpload, $extensionsOK)) { //Si c'est la bonne extension de fichier !
+									$dir = "assets/images/produits/image_upload_" . time() . ".png";
+									$resultat = move_uploaded_file($image['tmp_name'], $dir);
+									if($resultat) {
+										$urlVisuel = str_replace("assets/images/produits/", "", $dir);
+										$checkAddImage = $produit->addImage($urlVisuel);
+										if($checkAddImage) {
+											$notif = '<div class="alert alert-success">Visuel ajouté avec succès !</div>';
+										} else {
+											$testFile = "assets/images/produits/".$urlVisuel;
+											if(file_exists($testFile)) {
+												unlink($testFile);
+											}
+											$notif = '<div class="alert alert-danger">Erreur inconnue lors de le l\'enregistrement, veuillez nous contacter !</div>';
+										}
+									} else {
+										$notif = '<div class="alert alert-danger">Impossible d\'enregistrer le visuel</div>';
+									}
+								} else {
+									$notif = '<div class="alert alert-danger">Merci d\'envoyer un visuel au format png/jpg/jpeg/gif !</div>';
+								}
+							} else {
+								$notif = '<div class="alert alert-danger">Le produit demandé n\'existe pas !</div>';
+							}
+						} else {
+							$notif = '<div class="alert alert-danger">Merci de remplir correcteeeement le formulaire !</div>';
+						}
+						break;
 					default:
 						break;
 				}
@@ -794,6 +830,81 @@ class ControllerAdmin {
 				} else {
 					$retour['result'] = false;
 					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	public static function imagesForm() {
+		$retour = array();
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idProduit'])) {
+					$idProduit = strip_tags($_POST['idProduit']);
+					$produit = ModelProduit::select($idProduit);
+					if($produit != false) {
+						$images = $produit->getImages();
+
+						$formAdd = '<form enctype="multipart/form-data" method="POST" role="form">
+								<div class="form-group">
+									<label for="image">Visuel à ajouter</label>
+									<input id="image" class="form-control" type="file" name="image" placeholder="Sélectionnez une image" />
+								</div>
+								<div class="form-group">
+									<input type="hidden" name="actionP" value="addImage">
+									<input type="hidden" name="idProduit" value="'.$idProduit.'">
+									<button type="submit" class="btn btn-success">Ajouter</button>
+								</div>
+							</form>';
+
+						if($images != false) {
+							$formTable = '<div class="table-responsive">
+								<table class="table table-hover listProduitsTable">
+									<thead>
+										<tr>
+											<th>ID Visuel</th>
+											<th>URL</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>';
+
+							/*foreach ($categories as $categorie) {
+								$idCategorie = $categorie->get('idCategorie');
+								$labelCategorie = $categorie->get('label');
+								$formTable .= '<tr data-categorie="'.$idCategorie.'">
+									<td>'.$idCategorie.'</td>
+									<td>'.$labelCategorie.'</td>
+									<td>
+										<btn class="btn btn-xs btn-warning actionBtn" data-action="editCategorieForm"><i class="fa fa-pencil" aria-hidden="true"></i> Editer</btn>
+										<btn class="btn btn-xs btn-danger actionBtn" data-action="deleteCategorieForm"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</btn>
+									</td>
+								</tr>';
+							}*/
+
+							$formTable .= '</tbody>
+								</table>
+							</div>
+							<script>actionBtn();</script>';
+
+							$retour['result'] = true;
+							$retour['message'] = $formTable.$formAdd;
+						} else {
+							$retour['result'] = true;
+							$retour['message'] = $formAdd.'<div class="alert alert-warning text-center">Ce produit ne possède pour le moment aucun visuel</div>';
+						}
+					} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">Le produit demandé n\'existe pas</div>';
+					}
 				}
 			} else {
 				$retour['result'] = false;

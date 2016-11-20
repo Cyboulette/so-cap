@@ -83,6 +83,8 @@ function actionBtn() {
 				var idCategorie = $(this).parent().parent().attr('data-categorie');
 				var titleModal = "Supprimer une catégorie";
 				dataToPost = 'idCategorie='+encodeURIComponent(idCategorie);
+			} else if(action == "imagesForm") {
+				var titleModal = "Gérer les images";
 			} else {
 				action = null;
 			}

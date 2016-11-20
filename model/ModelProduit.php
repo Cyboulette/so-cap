@@ -51,6 +51,24 @@ class ModelProduit extends Model {
 		}
 	}
 
+	public function addImage($urlVisuel) {
+		try {
+			$sql = "INSERT INTO `visuelsProduits` VALUES (:idVisuel, :idProduit, :nomImage)";
+			$addImage = Model::$pdo->prepare($sql);
+
+			$values = array(
+				'idVisuel' => NULL,
+				'idProduit' => $this->idProduit,
+				'nomImage' => $urlVisuel
+			);
+
+			$addImage->execute($values);
+			return true;
+		} catch(PDOException $e) {
+			return false;
+		}
+	}
+
 	public function getImages() {
 		try {
 			$sql = "SELECT * FROM `visuelsProduits` WHERE `idProduit` = :idProduit";

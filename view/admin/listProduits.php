@@ -59,7 +59,7 @@
 						<btn class="btn btn-xs btn-primary actionBtn" data-action="stockForm"><?=$stock?>  <i class="fa fa-cog" aria-hidden="true"></i></btn>
 					</td>
 					<td>
-						<btn class="btn btn-xs btn-primary actionBtn"><i class="fa fa-picture-o" aria-hidden="true"></i> Gérer</btn>
+						<btn class="btn btn-xs btn-primary actionBtn" data-action="imagesForm"><i class="fa fa-picture-o" aria-hidden="true"></i> Gérer</btn>
 					</td>
 					<td>
 						<btn class="btn btn-xs btn-warning actionBtn" data-action="editForm"><i class="fa fa-pencil" aria-hidden="true"></i> Editer</btn>
