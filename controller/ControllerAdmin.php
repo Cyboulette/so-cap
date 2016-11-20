@@ -87,8 +87,16 @@ class ControllerAdmin {
 														$description = NULL;
 													}
 													
-													$produit = new ModelProduit(0, $label, $idCategorie, $description, $prix, $favorited);
-													$idProduitSaved = $produit->save();
+													$data = array(
+														'idProduit' => NULL,
+														'label' => $label,
+														'categorieProduit' => $idCategorie,
+														'description' => $description,
+														'prix' => $prix,
+														'favorited' => $favorited
+													);
+
+													$idProduitSaved = ModelProduit::save($data, 'id');
 
 													if($idProduitSaved != false) {
 														$produit = ModelProduit::select($idProduitSaved);
@@ -211,8 +219,11 @@ class ControllerAdmin {
 							if(!empty($labelCategorie) && !ctype_space($labelCategorie)) {
 								$checkCategorie = ModelCategorie::selectCustom('label', $labelCategorie);
 								if($checkCategorie == false) {
-									$newCategorie = new ModelCategorie(0, $labelCategorie);
-									$checkCategorieSave = $newCategorie->save();
+									$data = array(
+										'idCategorie' => NULL,
+										'label' => $labelCategorie
+									);
+									$checkCategorieSave = ModelCategorie::save($data);
 									if($checkCategorieSave != false) {
 										$notif = '<div class="alert alert-success">Catégorie ajoutée avec succès !</div>';
 									} else {

@@ -28,37 +28,12 @@ class ModelUtilisateur extends Model {
 	    }
 	}
 
-	public function generateRandomHex() {
+	public static function generateRandomHex() {
 	  $numbytes = 16;
 	  $bytes = openssl_random_pseudo_bytes($numbytes); 
 	  $hex   = bin2hex($bytes);
 	  return $hex;
 	}
-
-	public function save() {
-	    try {
-	      $sql = 'INSERT INTO `'.self::$tableName.'` (idUtilisateur, email, password, prenom, nom, rang, nonce) VALUES (NULL, :email, :password, :prenom, :nom, :rang, :nonce)';
-	      $addUser = Model::$pdo->prepare($sql);
-
-	      $values = array(
-	        'email' => strip_tags($this->get('email')),
-	        'password' => password_hash($this->get('password'), PASSWORD_DEFAULT),
-	        'prenom' => strip_tags($this->get('prenom')),
-	        'nom' => strip_tags($this->get('nom')),
-	        'rang' => 2,
-	        'nonce' => self::generateRandomHex()
-	      );
-
-	      $addUser->execute($values);
-	      return true;
-	    } catch(PDOException $e) {
-	        if (Conf::getDebug()) {
-	            echo $e->getMessage();
-	        }
-	        return false;
-	        die();
-	    }
-  	}
 
   	public function validate() {
 	    try {

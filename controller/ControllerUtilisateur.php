@@ -93,8 +93,17 @@ class ControllerUtilisateur {
                         if(!empty($prenom) && !ctype_space($prenom)) {
                            $nom = strip_tags($_POST['nom']);
                            if(!empty($nom) && !ctype_space($nom)) {
-                              $creationUser = new ModelUtilisateur(0, $email, $password, $prenom, $nom, 2, '');
-                              $resultSave = $creationUser->save();
+                              $data = array(
+                                 'idUtilisateur' => NULL,
+                                 'email' => $email,
+                                 'password' => password_hash($password, PASSWORD_DEFAULT),
+                                 'prenom' => $prenom,
+                                 'nom' => $nom,
+                                 'rang' => 2,
+                                 'nonce' => ModelUtilisateur::generateRandomHex()
+                              );
+                              $resultSave = ModelUtilisateur::save($data);
+                              // ENVOYER LE MAIL ICI
                               if($resultSave) {
                                  $message = 'Inscription réalisée avec succès !';
                                  $view = 'success_action';

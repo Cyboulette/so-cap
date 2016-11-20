@@ -43,6 +43,39 @@
 			}
 		}
 
+		/*
+			Fonction générique
+			$data = les colonnes de la table avec les valeurs associées
+			$typeReturn = NULL par défaut, ou id, si id, retourne le dernier id ajouté
+		*/
+		public static function save($data, $typeReturn = NULL) {
+			try {
+				$sql = 'INSERT INTO `'.static::$tableName.'` VALUES (';
+
+				foreach ($data as $key => $value) {
+					$sql .= ':'.$key.',';
+				}
+
+				$sql = substr($sql, 0, -1);
+				$sql .= ')';
+
+				$add = Model::$pdo->prepare($sql);
+				$add->execute($data);
+				if($typeReturn == 'id') {
+					$lastId = Model::$pdo->lastInsertId();
+					return $lastId;
+				} else {
+					return true;
+				}
+			} catch(PDOException $e) {
+				if (Conf::getDebug()) {
+					echo $e->getMessage();
+				}
+				return false;
+				die();
+			}
+		}
+
 		public static function select($data) {
 			$table_name = static::$tableName;
 			$class_name = 'Model'.ucfirst(static::$object);

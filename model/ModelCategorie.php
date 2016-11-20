@@ -20,27 +20,6 @@ class ModelCategorie extends Model {
 	    }
 	}
 
-	public function save() {
-		try {
-			$sql = 'INSERT INTO `'.static::$tableName.'` (idCategorie, label) VALUES (NULL, :label)';
-			$addCategorie = Model::$pdo->prepare($sql);
-
-			$values = array(
-				'label' => strip_tags($this->get('label'))
-			);
-
-			$addCategorie->execute($values);
-			$lastId = Model::$pdo->lastInsertId();
-			return $lastId;
-		} catch(PDOException $e) {
-			if (Conf::getDebug()) {
-				echo $e->getMessage();
-			}
-			return false;
-			die();
-		}
-	}
-
 	public function update($data) {
 		try {
 			$sql = 'UPDATE `'.static::$tableName.'` SET label = :label WHERE idCategorie = :idCategorie';

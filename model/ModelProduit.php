@@ -191,38 +191,13 @@ class ModelProduit extends Model {
 			$tab_t = $req_texte->fetchAll();
 			return $tab_t;
 		} catch(PDOException $e) {
-			if (Conf::getDebug()) {
-				echo $e->getMessage();
-			} else {
-				echo 'Une erreur est survenue <a href="index.php"> retour a la page d\'accueil </a>';
-			}
-			die();
-		}
-	}
-
-	public function save() {
-		try {
-			$sql = 'INSERT INTO `'.static::$tableName.'` (idProduit, label, categorieProduit, description, prix, favorited) VALUES (NULL, :label, :categorieProduit, :description, :prix, :favorited)';
-			$addProduit = Model::$pdo->prepare($sql);
-
-			$values = array(
-				'label' => strip_tags($this->get('label')),
-				'categorieProduit' => strip_tags($this->get('categorieProduit')),
-				'description' => strip_tags($this->get('description')),
-				'prix' => strip_tags($this->get('prix')),
-				'favorited' => strip_tags($this->get('favorited'))
-			);
-
-			$addProduit->execute($values);
-			$lastId = Model::$pdo->lastInsertId();
-			return $lastId;
-		} catch(PDOException $e) {
-			if (Conf::getDebug()) {
+			if(Conf::getDebug()) {
 				echo $e->getMessage();
 			}
 			return false;
 			die();
 		}
 	}
+	
 }
 ?>
