@@ -877,18 +877,18 @@ class ControllerAdmin {
 									</thead>
 									<tbody>';
 
-							/*foreach ($categories as $categorie) {
-								$idCategorie = $categorie->get('idCategorie');
-								$labelCategorie = $categorie->get('label');
-								$formTable .= '<tr data-categorie="'.$idCategorie.'">
-									<td>'.$idCategorie.'</td>
-									<td>'.$labelCategorie.'</td>
+							foreach ($images as $image) {
+								$idVisuel = $image['idVisuel'];
+								$urlImage = $image['nomImage'];
+								$formTable .= '<tr data-produit="'.$idProduit.'" data-visuel="'.$idVisuel.'">
+									<td>'.$idVisuel.'</td>
+									<td><a href="assets/images/produits/'.$urlImage.'">'.$urlImage.'</a></td>
 									<td>
 										<btn class="btn btn-xs btn-warning actionBtn" data-action="editCategorieForm"><i class="fa fa-pencil" aria-hidden="true"></i> Editer</btn>
 										<btn class="btn btn-xs btn-danger actionBtn" data-action="deleteCategorieForm"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</btn>
 									</td>
 								</tr>';
-							}*/
+							}
 
 							$formTable .= '</tbody>
 								</table>
@@ -896,7 +896,7 @@ class ControllerAdmin {
 							<script>actionBtn();</script>';
 
 							$retour['result'] = true;
-							$retour['message'] = $formTable.$formAdd;
+							$retour['message'] = $formAdd."<hr/>".$formTable;
 						} else {
 							$retour['result'] = true;
 							$retour['message'] = $formAdd.'<div class="alert alert-warning text-center">Ce produit ne possède pour le moment aucun visuel</div>';
