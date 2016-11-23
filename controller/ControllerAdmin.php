@@ -325,6 +325,35 @@ class ControllerAdmin {
 							$notif = '<div class="alert alert-danger">Merci de remplir correcteeeement le formulaire !</div>';
 						}
 						break;
+					case 'deleteImage':
+						if(isset($_POST['idVisuel'],$_POST['idProduit'],$_POST['confirm'])) {
+							$idVisuel = strip_tags($_POST['idVisuel']);
+							$idProduit = strip_tags($_POST['idProduit']);
+							$visuel = ModelProduit::getImage($idProduit, $idVisuel);
+
+							if($visuel != false) {
+								$confirm = strip_tags($_POST['confirm']);
+								if($confirm == true) {
+									$urlVisuel = "assets/images/produits/".$visuel['nomImage'];
+									$checkDeleteImage = ModelProduit::deleteImage($idVisuel);
+									if($checkDeleteImage) {
+										if(file_exists($urlVisuel)) {
+											unlink($urlVisuel);
+										}
+										$notif = '<div class="alert alert-success">L\'image a bien été supprimée !</div>';
+									} else {
+										$notif = '<div class="alert alert-danger">Impossible de supprimer cette image, veuillez nous contacter !</div>';
+									}
+								} else {
+									$notif = '<div class="alert alert-danger">Vous devez confirmer la suppression si vous cliquez sur le bouton "Confirmer" !</div>';
+								}
+							} else {
+								$notif = '<div class="alert alert-danger">Le visuel demandé n\'existe pas !</div>';
+							}
+						} else {
+							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
+						}
+						break;
 					default:
 						break;
 				}
@@ -882,10 +911,9 @@ class ControllerAdmin {
 								$urlImage = $image['nomImage'];
 								$formTable .= '<tr data-produit="'.$idProduit.'" data-visuel="'.$idVisuel.'">
 									<td>'.$idVisuel.'</td>
-									<td><a href="assets/images/produits/'.$urlImage.'">'.$urlImage.'</a></td>
+									<td><a target="_blank" href="assets/images/produits/'.$urlImage.'">'.$urlImage.'</a></td>
 									<td>
-										<btn class="btn btn-xs btn-warning actionBtn" data-action="editCategorieForm"><i class="fa fa-pencil" aria-hidden="true"></i> Editer</btn>
-										<btn class="btn btn-xs btn-danger actionBtn" data-action="deleteCategorieForm"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</btn>
+										<btn class="btn btn-xs btn-danger actionBtn" data-action="deleteImageForm"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</btn>
 									</td>
 								</tr>';
 							}
@@ -905,6 +933,60 @@ class ControllerAdmin {
 						$retour['result'] = false;
 						$retour['message'] = '<div class="alert alert-danger">Le produit demandé n\'existe pas</div>';
 					}
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	public static function deleteImageForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idProduit'], $_POST['idVisuel'])) {
+					$idProduit = strip_tags($_POST['idProduit']);
+					$idVisuel = strip_tags($_POST['idVisuel']);
+					$produit = ModelProduit::select($idProduit);
+
+					if($produit != false) {
+						$visuel = ModelProduit::getImage($idProduit, $idVisuel);
+						if($visuel != false) {
+							$urlImage = $visuel['nomImage'];
+							$form = '<form method="POST" role="form">
+								<div class="alert alert-info text-center">
+									Confirmez vous la suppression du visuel <b><a target="_blank" href="assets/images/produits/'.$urlImage.'">'.$urlImage.'</a></b> ?
+								</div>
+
+								<input type="hidden" name="idProduit" value="'.$idProduit.'">
+								<input type="hidden" name="idVisuel" value="'.$idVisuel.'">
+								<input type="hidden" name="confirm" value="true">
+								<input type="hidden" name="actionP" value="deleteImage">
+
+								<div class="form-group">
+									<button type="submit" class="btn btn-success">Confirmer</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Annuler">Annuler</button>
+								</div>
+							</form>';
+							$retour['result'] = true;
+							$retour['message'] = $form;
+						} else {
+							$retour['result'] = false;
+							$retour['message'] = '<div class="alert alert-danger">Ce visuel n\'existe pas, ou n\'est plus associé à ce produit</div>';
+						}
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">Le produit associé à ce visuel n\'existe pas !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
 				}
 			} else {
 				$retour['result'] = false;

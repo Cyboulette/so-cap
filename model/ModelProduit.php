@@ -92,6 +92,48 @@ class ModelProduit extends Model {
 		}
 	}
 
+	public function getImage($idProduit, $idVisuel) {
+		try {
+			$sql = "SELECT * FROM `visuelsProduits` WHERE `idProduit` = :idProduit AND `idVisuel` = :idVisuel";
+			$req_image = Model::$pdo->prepare($sql);
+
+			$values = array(
+				'idProduit' => $idProduit,
+				'idVisuel' => $idVisuel
+			);
+
+			$req_image->execute($values);
+			$result = $req_image->fetch();
+
+			if(empty($result)) {
+				return false;
+			} else {
+				return $result;
+			}
+
+		} catch(PDOException $e) {
+			return false;
+		}		
+	}
+
+	public static function deleteImage($idVisuel) {
+		try {
+		  $sql = "DELETE FROM `visuelsProduits` WHERE `idVisuel` = :idVisuel";
+		  $rep = Model::$pdo->prepare($sql);
+		  $values = array(
+		  	'idVisuel' => strip_tags($idVisuel)
+		  );
+		  $rep->execute($values);
+		  return true;
+		} catch(PDOException $e) {
+		  if (Conf::getDebug()) {
+		    echo $e->getMessage();
+		  }
+		  return false;
+		  die();
+		}
+	}
+
 	public function getAllCategories() {
 		try {
 			$sql = "SELECT * FROM `categories`";

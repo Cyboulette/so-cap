@@ -84,14 +84,19 @@ function actionBtn() {
 				var titleModal = "Supprimer une catégorie";
 				dataToPost = 'idCategorie='+encodeURIComponent(idCategorie);
 			} else if(action == "imagesForm") {
-				var titleModal = "Gérer les images";
+				var titleModal = "Gérer les visuels";
+			} else if(action == "deleteImageForm") {
+				var titleModal = "Supprimer un visuel";
+				var idProduit = $(this).parent().parent().attr('data-produit');
+				var idVisuel = $(this).parent().parent().attr('data-visuel');
+				dataToPost = 'idProduit='+encodeURIComponent(idProduit)+'&idVisuel='+encodeURIComponent(idVisuel);
 			} else {
 				action = null;
 			}
 
 			$(".modal-form-content").html('<div class="loader"></div><br/><div class="text-center"><em>Chargement en cours</em></div>');
 			$("#modalProduit .modal-title").html(titleModal);
-			if(action != "editCategorieForm" && action != "deleteCategorieForm") {
+			if(action != "editCategorieForm" && action != "deleteCategorieForm" && action != "deleteImageForm") {
 				$('#modalProduit').modal('toggle');
 			}
 
