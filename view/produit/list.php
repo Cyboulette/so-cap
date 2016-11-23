@@ -55,9 +55,9 @@
 					?>
 				</div>
 
-				<div class="title"><?=$label?></div>
+				<div class="title"><?=$description?></div>
 
-				<p class="description"><?=$description?></p>
+				<p class="description"><?=$label?></p>
 
 				<div class="details">
 					<span class="prix">Au prix de <?=$prix?> €</span>
