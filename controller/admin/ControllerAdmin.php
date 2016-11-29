@@ -3,6 +3,7 @@ require_once File::build_path(array('model', 'ModelUtilisateur.php'));
 require_once File::build_path(array('model', 'ModelProduit.php'));
 require_once File::build_path(array('model', 'ModelCategorie.php'));
 require_once File::build_path(array('model', 'ModelCommande.php'));
+require_once File::build_path(array('model', 'ModelRang.php'));
 
 class ControllerAdmin {
 
@@ -24,14 +25,15 @@ class ControllerAdmin {
 
 			require File::build_path(array('view', 'view.php'));
 		} else {
-			ModelUtilisateur::error('Vous ne pouvez pas accéder à cette page sans être connecté !');
+			ControllerDefault::error('Vous ne pouvez pas accéder à cette page sans être connecté !');
 		}
 	}
 
-	public static function listProduits() {
+	public static function produits() {
 		$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
 		$powerNeeded = ($currentUser->getPower() == Conf::$power['admin']);
 		
+		// Gère les actions 
 		if($powerNeeded) {
 			if(isset($_POST['actionP']) && !empty($_POST['actionP'])) {
 				switch ($_POST['actionP']) {
@@ -359,6 +361,8 @@ class ControllerAdmin {
 				}
 			}
 		}
+
+		// Affiche la vue par défaut = lister tous les produtis du site
 		$tab_p = ModelProduit::selectAll();
 		$view = 'listProduits';
 		$pagetitle = 'So\'Cap - Administration - Liste des produits';
@@ -983,6 +987,406 @@ class ControllerAdmin {
 	 				} else {
 						$retour['result'] = false;
 						$retour['message'] = '<div class="alert alert-danger">Le produit associé à ce visuel n\'existe pas !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	/* Gestion des utilisateurs */
+	public static function users() {
+		$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+		$powerNeeded = ($currentUser->getPower() == Conf::$power['admin']);
+		
+		// Gère les actions 
+		if($powerNeeded) {
+			if(isset($_POST['actionP']) && !empty($_POST['actionP'])) {
+				switch ($_POST['actionP']) {
+					case 'updateUser':
+						if(isset($_POST['idUser'], $_POST['prenom'], $_POST['nom'], $_POST['email'], $_POST['rang'])) {
+							$idUser = strip_tags($_POST['idUser']);
+							$prenom = strip_tags($_POST['prenom']);
+							$nom = strip_tags($_POST['nom']);
+							$email = strip_tags($_POST['email']);
+							$rang = strip_tags($_POST['rang']);
+							if(isset($_POST['password'])) {
+								$newPassword = $_POST['password'];
+							} else {
+								$newPassword = false;
+							}
+
+							$user = ModelUtilisateur::select($idUser);
+							if($user != false) {
+								if(!empty($prenom) && !ctype_space($prenom)) {
+									if(!empty($nom) && !ctype_space($nom)) {
+										if(!empty($email) && !ctype_space($email)) {
+											if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+												$checkRang = ModelRang::select($rang);
+												if($checkRang != false) {
+													$data = array(
+														'email' => $email,
+														'prenom' => $prenom,
+														'nom' => $nom,
+														'rang' => $rang,
+														'idUtilisateur' => $idUser
+													);
+													if($newPassword != false) {
+														$newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+														$data['password'] = $newPassword;
+													}
+													$checkUpdateUser = ModelUtilisateur::update_gen($data, 'idUtilisateur');
+													if($checkUpdateUser) {
+														$notif = '<div class="alert alert-success">Utilisateur modifié avec succès !</div>';
+														if($newPassword != false) {
+															$notif .= '<div class="alert alert-success">Le mot de passe a bien été changé !</div>';
+														}
+													} else {
+														$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
+													}
+												} else {
+													$notif = '<div class="alert alert-danger">Le rang demandé n\'existe pas !</div>';
+												}
+											} else {
+												$notif = '<div class="alert alert-danger">L\'e-mail doit être dans un format : nom@domain.ext</div>';
+											}
+										} else {
+											$notif = '<div class="alert alert-danger">L\'e-mail ne peut être vide !</div>';
+										}
+									} else {
+										$notif = '<div class="alert alert-danger">Le nom ne peut être vide !</div>';
+									}
+								} else {
+									$notif = '<div class="alert alert-danger">Le prénom ne peut être vide !</div>';
+								}
+							} else {
+								$notif = '<div class="alert alert-danger">L\'utilisateur demandé n\'existe pas !</div>';
+							}
+						} else {
+							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
+						}
+						break;
+					case 'deleteUser':
+						if(isset($_POST['idUser'],$_POST['confirm'])) {
+							$idUser = strip_tags($_POST['idUser']);
+							$user = ModelUtilisateur::select($idUser);
+							if($user != false) {
+								if($idUser != $_SESSION['idUser']) {
+									$confirm = strip_tags($_POST['confirm']);
+									if($confirm == true) {
+										$checkDeleteUser = ModelUtilisateur::delete($user->get('idUtilisateur'));
+										if($checkDeleteUser) {
+											$notif = '<div class="alert alert-success">L\'utilisateur a bien été supprimé !</div>';
+										} else {
+											$notif = '<div class="alert alert-danger">Impossible de supprimer cet utilisateur !</div>';
+										}
+									} else {
+										$notif = '<div class="alert alert-danger">Vous devez confirmer la suppression !</div>';
+									}
+								} else {
+									$notif = '<div class="alert alert-danger">Vous ne pouvez vous pas vous auto-supprimer !</div>';
+								}
+							} else {
+								$notif = '<div class="alert alert-danger">L\'utilisateur demandé n\'existe pas !</div>';
+							}
+						} else {
+							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
+						}
+						break;
+					case 'updateRang':
+						if(isset($_POST['idRang'], $_POST['label'], $_POST['color'])) {
+							$idRang = strip_tags($_POST['idRang']);
+							$label = strip_tags($_POST['label']);
+							$color = strip_tags($_POST['color']);
+							$rang = ModelRang::select($idRang);
+							if($rang != false) {
+								if(!empty($label) && !ctype_space($label)) {
+									if(!empty($color) && !ctype_space($color)) {
+										$colorH = str_replace("#", "", $color);
+										if(ctype_xdigit($colorH) && strlen($colorH) <= 6) {
+											$data = array(
+												'label' => $label,
+												'color' => $color,
+												'idRang' => $idRang
+											);
+											$checkUpdateRang = ModelRang::update_gen($data, 'idRang');
+											if($checkUpdateRang) {
+												$notif = '<div class="alert alert-success">Rang modifié avec succès !</div>';
+											} else {
+												$notif = '<div class="alert alert-danger">Impossible de modifier ce rang, veuillez nous contacter !</div>';
+											}
+										} else {
+											$notif = '<div class="alert alert-danger">Ce code couleur est invalide !</div>';
+										}
+									} else {
+										$notif = '<div class="alert alert-danger">Vous devez saisir un code couleur !</div>';
+									}
+								} else {
+									$notif = '<div class="alert alert-danger">Vous devez saisir un nom pour ce rang</div>';
+								}
+							} else {
+								$notif = '<div class="alert alert-danger">Le rang demandé n\'existe pas !</div>';
+							}
+						} else {
+							$notif = '<div class="alert alert-danger">Merci de remplir correctement le formulaire !</div>';
+						}
+						break;
+					default:
+						break;
+				}
+			}
+		}
+
+		// Affiche la vue par défaut = lister tous les produtis du site
+		$tab_u = ModelUtilisateur::selectAll();
+		$view = 'listUsers';
+		$pagetitle = 'So\'Cap - Administration - Liste des utilisateurs';
+		require File::build_path(array('view', 'view.php'));
+	}
+
+	public static function editUserForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idUser'])) {
+					$idUser = strip_tags($_POST['idUser']);
+					$user = ModelUtilisateur::select($idUser);
+
+					if($user != false) {
+						$rangs = ModelRang::selectAll();
+						if($rangs != false) {
+							$displayRangs = '';
+							foreach ($rangs as $rang) {
+								$idRang = $rang->get('idRang');
+								$labelRang = $rang->get('label');
+								$selected = ($idRang == $user->get('rang') ? 'selected="selected"' : '');
+								$displayRangs .= '<option '.$selected.' value="'.$idRang.'">'.$labelRang.'</option>';
+							}
+						}
+						$form = '<form method="POST" role="form">
+							<div class="form-group">
+								<label for="idUser">ID de l\'utilsiateur</label>
+								<input type="text" autocomplete="off" id="idUser" name="idUser" class="form-control" value="'.$user->get('idUtilisateur').'" placeholder="ID de l\'utilisateur" readonly="yes" />
+							</div>
+
+							<div class="form-group">
+								<label for="prenom">Prénom de l\'utilisateur</label>
+								<input type="text" name="prenom" autocomplete="off" id="prenom" class="form-control" value="'.$user->get('prenom').'" placeholder="Prénom de l\'utilisateur" />
+							</div>
+
+							<div class="form-group">
+								<label for="nom">Nom de l\'utilisateur</label>
+								<input type="text" name="nom" autocomplete="off" id="nom" class="form-control" value="'.$user->get('nom').'" placeholder="Nom de l\'utilisateur" />
+							</div>
+
+							<div class="form-group">
+								<label for="email">E-mail de l\'utilisateur</label>
+								<input type="mail" name="email" autocomplete="off" id="email" class="form-control" value="'.$user->get('email').'" placeholder="Email de l\'utilisateur" />
+							</div>
+
+							<div class="form-group">
+								<label for="password">Mot de passe de l\'utilisateur <small>(Laisser vide pour ne pas changer)</small></label>
+								<input type="password" name="password" autocomplete="new-password" id="password" class="form-control" value="" placeholder="Nouveau mot de passe" />
+							</div>
+
+							<div class="form-group">
+								<label for="rang">Rang de l\'utilisateur</label>
+								<select id="rang" name="rang" class="form-control">
+									'.$displayRangs.'
+								</select>
+							</div>
+
+							<input type="hidden" name="actionP" value="updateUser">
+
+							<div class="form-group">
+								<button type="submit" class="btn btn-success">Modifier</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Annuler">Annuler</button>
+							</div>
+						</form>';
+						$retour['result'] = true;
+						$retour['message'] = $form;
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">L\'utilisateur demandé n\'existe pas !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données pour afficher ce formulaire !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);		
+	}
+
+	public static function deleteUserForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idUser'])) {
+					$idUser = strip_tags($_POST['idUser']);
+					$user = ModelUtilisateur::select($idUser);
+
+					if($user != false) {
+						$emailUser = strip_tags($user->get('email'));
+						$form = '<form method="POST" role="form">
+							<div class="alert alert-info text-center">
+								Confirmez vous la suppression de l\'utilisateur <b>'.$emailUser.'</b> ?
+							</div>
+
+							<input type="hidden" name="idUser" value="'.$idUser.'">
+							<input type="hidden" name="confirm" value="true">
+							<input type="hidden" name="actionP" value="deleteUser">
+
+							<div class="form-group">
+								<button type="submit" class="btn btn-success">Confirmer</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Annuler">Annuler</button>
+							</div>
+						</form>';
+						$retour['result'] = true;
+						$retour['message'] = $form;
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">L\'utilisateur demandé n\'existe pas !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	public static function manageRangsForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idRang'])) {
+					$idRang = strip_tags($_POST['idRang']);
+					if($idRang == "null") {
+
+						$rangs = ModelRang::selectAll();
+						if($rangs != false) {
+							$formTable = '<div class="table-responsive">
+								<table class="table table-hover listProduitsTable">
+									<thead>
+										<tr>
+											<th>ID</th>
+											<th>Nom</th>
+											<th>Power</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>';
+
+							foreach ($rangs as $rang) {
+								$idRang = $rang->get('idRang');
+								$labelRang = $rang->get('label');
+								$powerRang = $rang->get('power');
+								$colorRang = $rang->get('color');
+								$formTable .= '<tr data-rang="'.$idRang.'">
+									<td>'.$idRang.'</td>
+									<td><span class="label" style="background-color:'.$colorRang.';">'.$labelRang.'</span></td>
+									<td>'.$powerRang.'</td>
+									<td>
+										<btn class="btn btn-xs btn-warning actionBtn" data-action="editRangForm"><i class="fa fa-pencil" aria-hidden="true"></i> Editer</btn>
+									</td>
+								</tr>';
+							}
+
+							$formTable .= '</tbody>
+								</table>
+							</div>
+							<div class="alert alert-info text-center">Il n\'est pas possible de supprimer/ajouter des rangs, ceux-ci ont été définis comme tel lors de la conception du site, veuillez vous rapprocher vers le webmaster pour en changer</div>
+							<script>actionBtn();</script>';
+
+							$retour['result'] = true;
+							$retour['message'] = $formTable;
+						} else {
+							$retour['result'] = true;
+							$retour['message'] = '<div class="alert alert-danger">Il n\'y a aucun rang, donc qu\'est-ce que vous faîtes là ?!</div>';
+						}
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">Ereur de transmission des données !</div>';
+					}
+				} else {
+					$retour['result'] = false;
+					$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas envoyé correctement les données !</div>';
+				}
+			} else {
+				$retour['result'] = false;
+				$retour['message'] = '<div class="alert alert-danger">Vous n\'avez pas les droits nécessaires pour accéder à cette page !</div>';
+			}
+		} else {
+			$retour['result'] = false;
+			$retour['message'] = '<div class="alert alert-danger">Vous devez être connecté pour accéder à cette page !</div>';
+		}
+		echo json_encode($retour);
+	}
+
+	public static function editRangForm() {
+		$retour = array(); //Tableau de retour
+		if(ControllerUtilisateur::isConnected()) {
+			$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+			if($currentUser->getPower() == Conf::$power['admin']) {
+				if(isset($_POST['idRang'])) {
+					$idRang = strip_tags($_POST['idRang']);
+					$rang = ModelRang::select($idRang);
+
+					if($rang != false) {
+						$form = '<form method="POST" role="form">
+							<div class="form-group">
+								<label for="idRang">ID du rang</label>
+								<input type="text" autocomplete="off" id="idRang" name="idRang" class="form-control" value="'.$rang->get('idRang').'" placeholder="ID du rang" readonly="readonly" />
+							</div>
+
+							<div class="form-group">
+								<label for="label">Libellé du rang</label>
+								<input type="text" name="label" autocomplete="off" id="label" class="form-control" value="'.$rang->get('label').'" placeholder="Libellé du rang" />
+							</div>
+
+							<div class="form-group">
+								<label for="color">Couleur du rang</label>
+								<input type="text" name="color" autocomplete="off" id="color" class="form-control" value="'.$rang->get('color').'" placeholder="Libellé du rang" />
+							</div>
+
+							<input type="hidden" name="actionP" value="updateRang">
+
+							<div class="form-group">
+								<button type="submit" class="btn btn-success">Modifier</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Annuler">Annuler</button>
+							</div>
+						</form>';
+						$retour['result'] = true;
+						$retour['message'] = $form;
+	 				} else {
+						$retour['result'] = false;
+						$retour['message'] = '<div class="alert alert-danger">Le rang demandée n\'existe pas !</div>';
 					}
 				} else {
 					$retour['result'] = false;

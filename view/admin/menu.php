@@ -13,8 +13,8 @@
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav boutonsHaut">
 				<li <?php ControllerDefault::active('admin', 'index'); ?>><a href="index.php?controller=admin&action=index">Accueil</a></li>
-				<li <?php ControllerDefault::active('admin', 'listProduits'); ?>><a href="index.php?controller=admin&action=listProduits">Produits</a></li>
-				<li <?php ControllerDefault::active('admin', 'listUsers'); ?>><a href="index.php?controller=admin&action=listUsers">Utilisateurs</a></li>
+				<li <?php ControllerDefault::active('admin', 'produits'); ?>><a href="index.php?controller=admin&action=produits">Produits</a></li>
+				<li <?php ControllerDefault::active('admin', 'users'); ?>><a href="index.php?controller=admin&action=users">Utilisateurs</a></li>
 				<li <?php ControllerDefault::active('admin', 'listCommandes'); ?>><a href="index.php?controller=admin&action=listCommandes">Commandes</a></li>
 			</ul>
 		</div>

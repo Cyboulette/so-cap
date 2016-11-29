@@ -11,8 +11,14 @@
 		$controller = $_GET['controller'];
 		$controller_class = 'Controller'.ucfirst($controller);
 
-		if(file_exists(File::build_path(array('controller', $controller_class.'.php')))) {
-			require_once File::build_path(array('controller', $controller_class.'.php'));
+		if($controller == "admin") {
+			$url = array('controller/admin/', $controller_class.'.php');
+		} else {
+			$url = array('controller', $controller_class.'.php');
+		}
+
+		if(file_exists(File::build_path($url))) {
+			require_once File::build_path($url);
 			if(class_exists($controller_class)) {
 				if(isset($_GET['action']) && !empty($_GET['action'])) {
 					$actionsExiste = get_class_methods($controller_class);

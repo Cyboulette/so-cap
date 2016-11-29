@@ -13,7 +13,7 @@ class ControllerLivraison {
       if(!empty($tab_l)) {
          require File::build_path(array('view', 'view.php'));
       } else {
-         ModelLivraison::error("pas de livraiosn");
+         ControllerDefault::error("pas de livraiosn");
       }
 	}
 

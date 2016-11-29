@@ -11,7 +11,7 @@
 					</div>
 					<h4><?=$nombreUsers?> utilisateur<?=($nombreUsers > 1 ? 's' : '')?> inscrit<?=($nombreUsers > 1 ? 's' : '')?> et valide<?=($nombreUsers > 1 ? 's' : '')?></h4>
 					<div class="button">
-						<a href="index.php?controller=admin&action=listUsers" class="btn btn-success">Gérer les utilisateurs</a>
+						<a href="index.php?controller=admin&action=users" class="btn btn-success">Gérer les utilisateurs</a>
 					</div>
 				</div>
 			</div>
@@ -22,7 +22,7 @@
 					</div>
 					<h4><?=$nombreProduits?> produit<?=($nombreProduits > 1 ? 's' : '')?> enregistré<?=($nombreProduits > 1 ? 's' : '')?></h4>
 					<div class="button">
-						<a href="index.php?controller=admin&action=listProduits" class="btn btn-success">Gérer les produits</a>
+						<a href="index.php?controller=admin&action=produits" class="btn btn-success">Gérer les produits</a>
 					</div>
 				</div>
 			</div>
@@ -33,7 +33,7 @@
 					</div>
 					<h4><?=$nombreCommandes?> commande<?=($nombreCommandes > 1 ? 's' : '')?> effectuée<?=($nombreCommandes > 1 ? 's' : '')?></h4>
 					<div class="button">
-						<a href="index.php?controller=admin&action=listCommandes" class="btn btn-success">Gérer les commandes</a>
+						<a href="index.php?controller=admin&action=commandes" class="btn btn-success">Gérer les commandes</a>
 					</div>
 				</div>
 			</div>

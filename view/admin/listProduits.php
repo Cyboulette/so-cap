@@ -13,7 +13,7 @@
 	<div class="form-group text-center">
 		<btn class="btn btn-success btn-xs actionBtn" data-action="addProduitForm"><i class="fa fa-plus" aria-hidden="true"></i> Ajouter un produit</btn>
 		<btn class="btn btn-warning btn-xs actionBtn" data-action="manageCategForm"><i class="fa fa-cog" aria-hidden="true"></i> Gérer les catégories</btn>
-		<a href="index.php?controller=admin&action=listProduits" class="btn btn-xs btn-primary"><i class="fa fa-refresh" aria-hidden="true"></i> Rafraichir</a>
+		<a href="index.php?controller=admin&action=produits" class="btn btn-xs btn-primary"><i class="fa fa-refresh" aria-hidden="true"></i> Rafraichir</a>
 	</div>
 	<div class="row">
 		<div class="table-responsive">
@@ -73,7 +73,7 @@
 	</div>
 </div>
 
-<div class="modal fade" id="modalProduit" tabindex="-1" role="dialog" aria-labelledby="modalProduit">
+<div class="modal fade" id="modalAction" tabindex="-1" role="dialog" aria-labelledby="modalAction">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">

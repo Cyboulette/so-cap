@@ -11,6 +11,14 @@ $(function(){
 			}
 		}
 	});
+
+	$(".listUsersTable").tablesorter({
+		headers: {
+			5: {
+				sorter: false
+			}
+		}
+	});
 });
 
 function changeFavori() {
@@ -53,6 +61,7 @@ function actionBtn() {
 		var action = $(this).attr('data-action');
 
 		if(action != undefined) {
+			// Gestion des produits
 			var idProduit = $(this).parent().parent().attr('data-produit');
 			var dataToPost = 'idProduit='+idProduit;
 			if(action == "stockForm") {
@@ -90,14 +99,31 @@ function actionBtn() {
 				var idProduit = $(this).parent().parent().attr('data-produit');
 				var idVisuel = $(this).parent().parent().attr('data-visuel');
 				dataToPost = 'idProduit='+encodeURIComponent(idProduit)+'&idVisuel='+encodeURIComponent(idVisuel);
+
+			// Gestion des utilisateurs
+			} else if(action == "editUserForm") {
+				var titleModal = "Editer un utilisateur";
+				var idUser = $(this).parent().parent().attr('data-user');
+				var dataToPost = 'idUser='+idUser;
+			} else if(action == "deleteUserForm") {
+				var titleModal = "Supprimer un utilisateur";
+				var idUser = $(this).parent().parent().attr('data-user');
+				var dataToPost = 'idUser='+idUser;
+ 			} else if(action == "manageRangsForm") {
+				var titleModal = "Gérer les rangs";
+				var dataToPost = 'idRang=null';
+ 			} else if(action == "editRangForm") {
+				var idRang = $(this).parent().parent().attr('data-rang');
+				var titleModal = "Editer un rang";
+				var dataToPost = 'idRang='+encodeURIComponent(idRang);
 			} else {
 				action = null;
 			}
 
 			$(".modal-form-content").html('<div class="loader"></div><br/><div class="text-center"><em>Chargement en cours</em></div>');
-			$("#modalProduit .modal-title").html(titleModal);
-			if(action != "editCategorieForm" && action != "deleteCategorieForm" && action != "deleteImageForm") {
-				$('#modalProduit').modal('toggle');
+			$("#modalAction .modal-title").html(titleModal);
+			if(action != "editCategorieForm" && action != "deleteCategorieForm" && action != "deleteImageForm" && action != "editRangForm") {
+				$('#modalAction').modal('toggle');
 			}
 
 			$.ajax({

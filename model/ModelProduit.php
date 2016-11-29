@@ -92,7 +92,7 @@ class ModelProduit extends Model {
 		}
 	}
 
-	public function getImage($idProduit, $idVisuel) {
+	public static function getImage($idProduit, $idVisuel) {
 		try {
 			$sql = "SELECT * FROM `visuelsProduits` WHERE `idProduit` = :idProduit AND `idVisuel` = :idVisuel";
 			$req_image = Model::$pdo->prepare($sql);

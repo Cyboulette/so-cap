@@ -40,7 +40,7 @@ class ControllerProduit {
          $powerNeeded = true;
          require File::build_path(array('view', 'view.php'));
       } else {
-         ModelProduit::error("Nous ne possédons aucun produit");
+         ControllerDefault::error("Nous ne possédons aucun produit");
       }
 	}
 
@@ -88,7 +88,7 @@ class ControllerProduit {
          $powerNeeded = true;
          require File::build_path(array('view', 'view.php'));
       } else {
-         ModelProduit::error("Ce produit n'est pas disponible");
+         ControllerDefault::error("Ce produit n'est pas disponible");
       }
    }
    

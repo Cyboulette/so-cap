@@ -102,14 +102,6 @@ class ModelUtilisateur extends Model {
 	        die();
 	    }  		
   	}
-
-  	public static function errorForm($error, $view, $titlePage) {
-		$displayError = $error;
-		$view = $view;
-		$pagetitle = 'So\'Cap - '.$titlePage;
-		$powerNeeded = true;
-		require File::build_path(array('view', 'view.php'));
-  	}
 }
 
 ?>

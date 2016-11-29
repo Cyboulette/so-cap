@@ -20,6 +20,8 @@
 
 		static private $debug = true;
 
+		// Ce seront toujours ces 3 rangs
+		// Il n'est en effet, pas demandé de les gérer
 		static public $power = array(
 			'admin' => 100,
 			'membre' => 10,

@@ -44,7 +44,7 @@
 		}
 
 		/*
-			Fonction générique
+			Fonction générique qui permet d'insérer dans une table
 			$data = les colonnes de la table avec les valeurs associées
 			$typeReturn = NULL par défaut, ou id, si id, retourne le dernier id ajouté
 		*/
@@ -76,6 +76,33 @@
 			}
 		}
 
+		public static function update_gen($data, $whereCle) {
+			try {
+				$sql = 'UPDATE `'.static::$tableName.'` SET ';
+
+				foreach ($data as $key => $value) {
+					$sql .= $key.' = :'.$key.', ';
+				}
+				$sql = substr($sql, 0, -2);
+				$sql .= ' WHERE '.$whereCle.' = :'.$whereCle;
+				
+				$update = Model::$pdo->prepare($sql);
+				$update->execute($data);
+				return true;
+			} catch(PDOException $e) {
+				if(Conf::getDebug()) {
+					echo $e->getMessage();
+				}
+				return false;
+				die();
+			}
+		}
+
+		/*
+			Fonction générique qui permet de sélectionner par la clé primaire d'une table
+			$data = la valeur qui doit = clé primaire
+
+		*/
 		public static function select($data) {
 			$table_name = static::$tableName;
 			$class_name = 'Model'.ucfirst(static::$object);
@@ -100,13 +127,17 @@
 			} catch(PDOException $e) {
 				if (Conf::getDebug()) {
 					echo $e->getMessage();
-				} else {
-					echo 'Une erreur est survenue <a href="index.php"> retour a la page d\'accueil </a>';
 				}
+				return false;
 				die();
 			}
 		}
 
+		/*
+			Fonction générique qui permet de sélectionner tous résultats pour une clé particulière et sa valeur ($data) associée
+			$cle = le nom de la colonne à vérifier
+			$data = la valeur
+		*/
 		public static function selectCustom($cle, $data) {
 			$table_name = static::$tableName;
 			$class_name = 'Model'.ucfirst(static::$object);
@@ -125,12 +156,16 @@
 			} catch(PDOException $e) {
 				if (Conf::getDebug()) {
 					echo $e->getMessage();
-				} else {
-					echo 'Une erreur est survenue <a href="index.php"> retour a la page d\'accueil </a>';
 				}
+				return false;
 				die();
 			}
 		}
+
+		/*
+			Fonction générique qui permet de supprimer de la table du model courant la valeur de la clé primaire
+			$data = valeur de la clé primaire
+		*/
 
 		public static function delete($data) {
 			$table_name = static::$tableName;
@@ -139,7 +174,7 @@
 			  $sql = "DELETE FROM `".$table_name."` WHERE `".$primary_key."` = :".$primary_key."";
 			  $rep = Model::$pdo->prepare($sql);
 			  $values = array(
-			  	$primary_key => htmlspecialchars($data)
+			  	$primary_key => $data
 			  );
 			  $rep->execute($values);
 			  return true;
@@ -152,8 +187,9 @@
 			}
 		}
 
-		// Factoriser le get et le set dans Model.php
-		// On va utiliser un getter générique et un setter générique, ce sera plus rapide et plus pratique
+		/*
+			Getter et Seter génériques pour chaque Model
+		*/
 		public function get($nom_attribut) {
 		    if (property_exists($this, $nom_attribut))
 		        return $this->$nom_attribut;
@@ -165,15 +201,7 @@
 		        $this->$nom_attribut = $valeur;
 		    return false;
 		}
-
-		//Gestion des erreurs pour tous les modèles !!
-		public static function error($error) {
-			$displayError = $error;
-			$view = 'error';
-			$pagetitle= 'So\'Cap - Erreur';
-			$powerNeeded = true;
-			require File::build_path(array('view', 'view.php'));
-		}
+		
 	}
 
 	Model::Init();

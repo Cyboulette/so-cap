@@ -34,22 +34,22 @@ class ControllerUtilisateur {
                         $powerNeeded = self::isConnected();
                         require File::build_path(array('view', 'view.php'));
                      } else {
-                        ModelUtilisateur::errorForm('Le mot de passe est incorrect', 'connexion', $titlePage);
+                        self::errorForm('Le mot de passe est incorrect', 'connexion', $titlePage);
                      }
                   } else {
-                     ModelUtilisateur::errorForm('Vous devez valider votre adresse email en cliquant sur le lien qui vous a été envoyé par mail', 'connexion', $titlePage);
+                     self::errorForm('Vous devez valider votre adresse email en cliquant sur le lien qui vous a été envoyé par mail', 'connexion', $titlePage);
                   }
                } else {
-                  ModelUtilisateur::errorForm('Cette adresse e-mail ne correspond à aucun compte !', 'connexion', $titlePage);
+                  self::errorForm('Cette adresse e-mail ne correspond à aucun compte !', 'connexion', $titlePage);
                }
             } else {
-               ModelUtilisateur::errorForm('L\'adresse e-mail renseignée est invalide !', 'connexion', $titlePage);
+               self::errorForm('L\'adresse e-mail renseignée est invalide !', 'connexion', $titlePage);
             }
          } else {
-            ModelUtilisateur::error('Vous devez renseigner tous les champs !');
+            ControllerDefault::error('Vous devez renseigner tous les champs !');
          }
       } else {
-         ModelUtilisateur::error('Vous êtes déjà connecté !');
+         ControllerDefault::error('Vous êtes déjà connecté !');
       }
    }
 
@@ -111,31 +111,31 @@ class ControllerUtilisateur {
                                  $powerNeeded = !self::isConnected();
                                  require File::build_path(array('view', 'view.php'));
                               } else {
-                                 ModelUtilisateur::errorForm('Impossible de vous inscrire, merci de nous contacter', 'register', $titlePage);
+                                 self::errorForm('Impossible de vous inscrire, merci de nous contacter', 'register', $titlePage);
                               }
                            } else {
-                              ModelUtilisateur::errorForm('Vous devez saisir votre nom', 'register', $titlePage);
+                              self::errorForm('Vous devez saisir votre nom', 'register', $titlePage);
                            }
                         } else {
-                           ModelUtilisateur::errorForm('Vous devez saisir votre prénom', 'register', $titlePage);
+                           self::errorForm('Vous devez saisir votre prénom', 'register', $titlePage);
                         }
                      } else {
-                        ModelUtilisateur::errorForm('Les mots de passe ne correspondent pas', 'register', $titlePage);
+                        self::errorForm('Les mots de passe ne correspondent pas', 'register', $titlePage);
                      }
                   } else {
-                     ModelUtilisateur::errorForm('Vous ne pouvez pas avoir un mot de passe vide !', 'register', $titlePage);
+                     self::errorForm('Vous ne pouvez pas avoir un mot de passe vide !', 'register', $titlePage);
                   }
                } else {
-                  ModelUtilisateur::errorForm('Cette adresse e-mail est déjà inscrite sur notre site', 'register', $titlePage);
+                  self::errorForm('Cette adresse e-mail est déjà inscrite sur notre site', 'register', $titlePage);
                }
             } else {
-               ModelUtilisateur::errorForm('Vous devez saisir une adresse e-mail valide !', 'register', $titlePage);
+               self::errorForm('Vous devez saisir une adresse e-mail valide !', 'register', $titlePage);
             }
          } else {
-            ModelUtilisateur::error('Merci de saisir tous les champs !');
+            ControllerDefault::error('Merci de saisir tous les champs !');
          }
       } else {
-         ModelUtilisateur::error('Vous ne pouvez pas vous inscrire en étant déjà connecté !');
+         ControllerDefault::error('Vous ne pouvez pas vous inscrire en étant déjà connecté !');
       }
    }
 
@@ -158,19 +158,19 @@ class ControllerUtilisateur {
                      $powerNeeded = !self::isConnected();
                      require File::build_path(array('view', 'view.php'));
                   } else {
-                     ModelUtilisateur::error('Impossible de valider votre adresse e-mail, veuillez nous contacter');
+                     ControllerDefault::error('Impossible de valider votre adresse e-mail, veuillez nous contacter');
                   }
                } else {
-                  ModelUtilisateur::error('Cette clé de validation est invalide !');
+                  ControllerDefault::error('Cette clé de validation est invalide !');
                }
             } else {
-               ModelUtilisateur::error('Ce mail n\'est pas inscrit sur notre site !');
+               ControllerDefault::error('Ce mail n\'est pas inscrit sur notre site !');
             }
          } else {
-            ModelUtilisateur::error('Impossible de valider sans recevoir les données');
+            ControllerDefault::error('Impossible de valider sans recevoir les données');
          }
       } else {
-         ModelUtilisateur::error('Impossible de valider sans recevoir les données');
+         ControllerDefault::error('Impossible de valider sans recevoir les données');
       }
    }
 
@@ -196,5 +196,14 @@ class ControllerUtilisateur {
          return 0;
       }
    }
+
+   public static function errorForm($error, $view, $titlePage) {
+      $displayError = $error;
+      $view = $view;
+      $pagetitle = 'So\'Cap - '.$titlePage;
+      $powerNeeded = true;
+      require File::build_path(array('view', 'view.php'));
+   }
+
 }
 ?>
