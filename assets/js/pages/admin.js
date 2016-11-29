@@ -101,10 +101,22 @@ function actionBtn() {
 				dataToPost = 'idProduit='+encodeURIComponent(idProduit)+'&idVisuel='+encodeURIComponent(idVisuel);
 
 			// Gestion des utilisateurs
-			} else if(action == "editUserForm") {
-				var titleModal = "Editer un utilisateur";
-				var idUser = $(this).parent().parent().attr('data-user');
-				var dataToPost = 'idUser='+idUser;
+			} else if(action == "manageUserForm") {
+				var typeAction = $(this).attr('data-type');
+				if(typeAction == "edit") {
+					var titleModal = "Editer un utilisateur";
+					var idUser = $(this).parent().parent().attr('data-user');
+					var adddData = null;
+				} else if(typeAction == "add") {
+					var titleModal = "Ajouter un utilisateur";
+					var idUser = null;
+					if(typeof dataPosted !== 'undefined') {
+						// Si jamais on a déjà tenté d'envoyer le formulaire mais qu'il y avait une erreur on renvoit les données
+						// On les encode en JSON pour pouvoir les transmettre correctement et en sécurité !
+						var adddData = "&dataPosted="+JSON.stringify(dataPosted);
+					}
+				}
+				var dataToPost = 'typeAction='+encodeURIComponent(typeAction)+'&idUser='+encodeURIComponent(idUser)+adddData;
 			} else if(action == "deleteUserForm") {
 				var titleModal = "Supprimer un utilisateur";
 				var idUser = $(this).parent().parent().attr('data-user');
