@@ -1,4 +1,6 @@
-<?php 
+<?php
+	ini_set('display_errors', 1);
+	error_reporting(E_ALL ^ E_NOTICE); 
 	//session_start(); // Session ici, car page parente de TOUTES
 	$DS = DIRECTORY_SEPARATOR;
 	$ROOT_FOLDER = __DIR__.$DS;

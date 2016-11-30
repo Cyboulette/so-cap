@@ -7,5 +7,5 @@
 	<br/>
 	<div class="text-center"><em>Redirection en cours</em></div>
 	
-	<meta http-equiv="refresh" content="1; url=index.php" />
+	<meta http-equiv="refresh" content="1; url=<?=$urlRedirect?>" />
 </div>

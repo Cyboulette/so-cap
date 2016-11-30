@@ -29,6 +29,7 @@ class ControllerUtilisateur {
                         $_SESSION['login'] = true;
                         $_SESSION['idUser'] = $checkUser[0]->get('idUtilisateur');
                         $message = 'Connexion réalisée avec succès !';
+                        $urlRedirect = 'index.php';
                         $view = 'success_action';
                         $pagetitle = 'So\'Cap - Connexion réussie';
                         $powerNeeded = self::isConnected();
@@ -59,12 +60,13 @@ class ControllerUtilisateur {
          unset($_SESSION['login']);
          unset($_SESSION['idUser']);
          $message = 'Déconnexion réalisée avec succès !';
+         $urlRedirect = 'index.php';
          $view = 'success_action';
          $pagetitle = 'So\'Cap - Déconnexion';
          $powerNeeded = !self::isConnected();
          require File::build_path(array('view', 'view.php'));
       } else {
-         ModelUtilisateur::error('Vous n\'êtes pas connecté, impossible de vous déconnecter !');
+         ControllerDefault::error('Vous n\'êtes pas connecté, impossible de vous déconnecter !');
       }
    }
 
@@ -106,6 +108,7 @@ class ControllerUtilisateur {
                               // ENVOYER LE MAIL ICI
                               if($resultSave) {
                                  $message = 'Inscription réalisée avec succès !';
+                                 $urlRedirect = 'index.php';
                                  $view = 'success_action';
                                  $pagetitle = 'So\'Cap - Inscription';
                                  $powerNeeded = !self::isConnected();
@@ -153,6 +156,7 @@ class ControllerUtilisateur {
                   $checkUpdate = $user->validate();
                   if($checkUpdate) {
                      $message = 'Validation de votre e-mail réalisée avec succès !';
+                     $urlRedirect = 'index.php';
                      $view = 'success_action';
                      $pagetitle = 'So\'Cap - Validation de l\'adresse e-mail';
                      $powerNeeded = !self::isConnected();
@@ -174,6 +178,80 @@ class ControllerUtilisateur {
       }
    }
 
+   public static function profil() {
+      $view = 'profil';
+      $pagetitle = 'So\'Cap - Votre Profil';
+      $powerNeeded = self::isConnected();
+      $user = ModelUtilisateur::select($_SESSION['idUser']);
+      if($user != false) {
+         require File::build_path(array('view', 'view.php'));
+      } else {
+         ControllerDefault::error('Votre profil n\'existe pas !');
+      }
+   }
+
+   public static function updateProfil() {
+      if(isset($_POST['email'], $_POST['prenom'], $_POST['nom'])) {
+         $email = strip_tags($_POST['email']);
+         $prenom = strip_tags($_POST['prenom']);
+         $nom = strip_tags($_POST['nom']);
+
+         if(isset($_POST['password'], $_POST['password_confirm'])) {
+            $newPassword = $_POST['password'];
+            $newPasswordConfirm = $_POST['password_confirm'];
+         } else {
+            $newPassword = false;
+            $newPasswordConfirm = false;
+         }
+         if(!empty($prenom) && !ctype_space($prenom)) {
+            if(!empty($nom) && !ctype_space($nom)) {
+               if(!empty($email) && !ctype_space($email)) {
+                  if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                     $currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
+                     if($currentUser != false) {
+                        $data = array(
+                           'email' => $email,
+                           'prenom' => $prenom,
+                           'nom' => $nom,
+                           'idUtilisateur' => $currentUser->get('idUtilisateur')
+                        );
+                        if($newPassword != false && $newPasswordConfirm != false) {
+                           if($newPassword == $newPasswordConfirm) {
+                              $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                              $data['password'] = $newPassword;
+                           }
+                        }
+                        $checkUpdateProfil = ModelUtilisateur::update_gen($data, 'idUtilisateur');
+                        if($checkUpdateProfil) {
+                           $message = 'Profil mis à jour avec succès !';
+                           $urlRedirect = 'index.php?controller=utilisateur&action=profil';
+                           $view = 'success_action';
+                           $pagetitle = 'So\'Cap - Mise à jour du profil';
+                           $powerNeeded = self::isConnected();
+                           require File::build_path(array('view', 'view.php'));
+                        } else {
+                           ControllerDefault::error('Impossible de mettre à jour votre profil, veuillez nous contacter !');
+                        }
+                     } else {
+                        ControllerDefault::error('Impossible de retrouver votre profil, veuillez nous contacter !');
+                     }
+                  } else {
+                     ControllerDefault::error('Votre e-mail doit être dans un format correct !');
+                  }
+               } else {
+                  ControllerDefault::error('Vous devez saisir votre e-mail !');
+               }
+            } else {
+               ControllerDefault::error('Vous devez saisir votre nom !');
+            }
+         } else {
+            ControllerDefault::error('Vous devez saisir votre prénom !');
+         }
+      } else {
+         ControllerDefault::error('Vous devez renvoyer tous les champs obligatoires !');
+      }
+   }
+
    // Détermine si un utilisateur est connecté ou non
    public static function isConnected() {
       if(isset($_SESSION['login'], $_SESSION['idUser'])) {
@@ -183,7 +261,7 @@ class ControllerUtilisateur {
       }
    }
 
-   public static function checkRang($rang) {
+   /*public static function checkRang($rang) {
       if(self::isConnected()) {
          $userConnected = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser']);
          if($userConnected != false) {
@@ -195,7 +273,7 @@ class ControllerUtilisateur {
       } else {
          return 0;
       }
-   }
+   }*/
 
    public static function errorForm($error, $view, $titlePage) {
       $displayError = $error;
