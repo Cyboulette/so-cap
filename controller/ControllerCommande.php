@@ -1,9 +1,7 @@
 <?php
 require_once File::build_path(array('model', 'ModelCommande.php'));
 require_once File::build_path(array('model', 'ModelUtilisateur.php'));
-
-require_once File::build_path(array('model', 'ModelUtilisateur.php'));
-//require_once File::build_path(array('controller', 'ControllerUtilisateur.php')); --> Devenu inutile grâce à l'auto-loader du routeur
+require_once File::build_path(array('model', 'ModelProduitsCommandes.php'));
 require_once File::build_path(array('lib/fpdf', 'fpdf.php'));
 
 class ControllerCommande {
@@ -109,34 +107,36 @@ class ControllerCommande {
       $pdf->Output();
    }
 
-   public static function createCommande() {
-      if(controllerPanier::nombreProduits() > 0){
-            $data = array(
-		        'idCommande' => NULL,
-		        'idUtilisateur' => _SESSION['idUser'],
-		        'dateCommande' => now(),
-		        'prixTotal' => 150,
-			);
-			$idCommande = ModelCommande::save($data,'id');
-			$checkCommande = ModelCommande::select($idCommande);
-			if($checkCommande != false){
-		        foreach ($_SESSION['Panier'] as $key => $valeur) {
-		            $produit = ModelProduit::select($key);
-					$checkProduit = ModelProduit::select($key);
-					if($checkProduit != false){
-
-		            	$data = array(
-				            'idCommande' => $idCommande,
-				            'idProduit' => $key,
-				            'quantite' => $valeur
-						);
-						$resultSave = ModelProduitcommandes::save($data);
-					}
-			}
-	   	} else {
-        	ControllerDefault::error('Vous n\'avez pas de produit' );
-   		}
-   }
+  public static function createCommande() {
+    if(ControllerPanier::nombreProduits() > 0){
+        $data = array(
+          'idCommande' => NULL,
+          'idUtilisateur' => $_SESSION['idUser'],
+          'dateCommande' => date("Y-m-d H:i:s"),
+          'prixTotal' => 150
+        );
+        $idCommande = ModelCommande::save($data, 'id');
+        $checkCommande = ModelCommande::select($idCommande);
+        if($checkCommande != false) {
+          foreach ($_SESSION['panier'] as $key => $valeur) {
+            $produit = ModelProduit::select($key);
+            $checkProduit = ModelProduit::select($key);
+            if($checkProduit != false){
+              $data = array(
+                'idCommande' => $idCommande,
+                'idProduit' => $key,
+                'quantite' => $valeur
+              );
+              $resultSave = ModelProduitsCommandes::save($data);
+            }
+          }
+        } else {
+          ControllerDefault::error('La commande n\'a pas pu être crée !');
+        }
+    } else {
+      ControllerDefault::error('Vous devez posséder des produits !');
+    }
+  }
 
 }
 ?>

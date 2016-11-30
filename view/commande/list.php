@@ -25,7 +25,7 @@
            <td><?=$prixTotal?></td>
            <td><div class="buttons">
 					<a href="?controller=commande&action=read&idCommande=<?=$idCommande?>" class="btn btn-primary btn-xs"><i class="fa fa-search" aria-hidden="true"></i>  Voir le détail</a>
-					<a href="?controller=commande&action=read&idCommande=<?=$idCommande?>" class="btn btn-danger btn-xs"><i class="fa fa-file-text-o" aria-hidden="true"></i>  Editer une facture</a></td>
+					<a href="?controller=commande&action=genererFacture&idCommande=<?=$idCommande?>" class="btn btn-danger btn-xs"><i class="fa fa-file-text-o" aria-hidden="true"></i>  Editer une facture</a></td>
        </tr>
 	<?php } ?>
 	</tbody>

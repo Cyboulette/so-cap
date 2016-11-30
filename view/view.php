@@ -99,7 +99,7 @@
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
 		        <button type="button" class="clearPanier actionBtnPanier btn btn-danger" data-action="clearPanier">Vider le panier</button>
-		        <button type="button" class="goPaiement btn btn-primary">Passer au paiement >></button>
+		        <a href="index.php?controller=commande&action=createCommande" class="btn btn-primary goPaiement">Passer au paiement >></a>
 		      </div>
 		    </div>
 		  </div>

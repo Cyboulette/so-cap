@@ -61,7 +61,7 @@
 		  <div class="col-md-4"></div>
 		  <div class="col-md-4">
 		  		<div class="buttons">
-					<a href="?controller=commande&action=read&idCommande=<?=$idCommande?>" class="btn btn-danger btn-xs"><i class="fa fa-file-text-o" aria-hidden="true"></i>  Editer une facture</a></td>
+					<a href="?controller=commande&action=genererFacture&idCommande=<?=$idCommande?>" class="btn btn-danger btn-xs"><i class="fa fa-file-text-o" aria-hidden="true"></i>  Editer une facture</a></td>
 				</div>
 		  </div>
 		  <div class="col-md-4"></div>
