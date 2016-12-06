@@ -631,6 +631,7 @@ function Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false, $link
 			$dx = $this->cMargin;
 		if($this->ColorFlag)
 			$s .= 'q '.$this->TextColor.' ';
+		$txt = iconv('UTF-8', 'CP1252',$txt);
 		$s .= sprintf('BT %.2F %.2F Td (%s) Tj ET',($this->x+$dx)*$k,($this->h-($this->y+.5*$h+.3*$this->FontSize))*$k,$this->_escape($txt));
 		if($this->underline)
 			$s .= ' '.$this->_dounderline($this->x+$dx,$this->y+.5*$h+.3*$this->FontSize,$txt);

@@ -1,3 +1,8 @@
+<?php
+  if(isset($message)) {
+    echo $message;
+  }
+?>
 <h1>Voici la liste de toute vos commandes :</h1>
 
 <div class="row">

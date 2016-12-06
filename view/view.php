@@ -49,7 +49,7 @@
 	            	$currentUser = ModelUtilisateur::selectCustom('idUtilisateur', $_SESSION['idUser'])[0];
 	            ?>
 	            	<li <?php ControllerDefault::active('commande', ''); ?>><a href="index.php?controller=commande&action=readAll">Vos commandes</a></li>
-	            	<li <?php ControllerDefault::active('utilisateur', 'profil'); ?>><a href="index.php?controller=utilisateur&action=profil">Mon Profil</a></li>
+	            	<li <?php ControllerDefault::active('utilisateur', 'profil'); ?> <?php ControllerDefault::active('utilisateur', 'updateProfil'); ?>><a href="index.php?controller=utilisateur&action=profil">Mon Profil</a></li>
 	            	<li <?php ControllerDefault::active('utilisateur', 'disconnect'); ?>><a href="index.php?controller=utilisateur&action=disconnect">Déconnexion</a></li>
 	            	<?php if($currentUser->getPower() == Conf::$power['admin']) { ?>
 	            		<li <?php ControllerDefault::active('admin', ''); ?>><a href="index.php?controller=admin&action=index">Administration</a></li>

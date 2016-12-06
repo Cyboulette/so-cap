@@ -52,6 +52,28 @@ class ModelCommande extends Model {
 		}
 	}
 
+	public function getNbProduits($idProduit) {
+	    try {
+	      $sql = 'SELECT `quantite` FROM `produitsCommandes` WHERE `idCommande` = :idCommande AND `idProduit` = :idProduit';
+	      $getNombre = Model::$pdo->prepare($sql);
+
+	      $values = array(
+	      	'idCommande' => $this->idCommande,
+	      	'idProduit' => $idProduit
+	      );
+
+	      $getNombre->execute($values);
+	      $result_nombre = $getNombre->fetch();
+	      return $result_nombre[0];
+	    } catch(PDOException $e) {
+	        if (Conf::getDebug()) {
+	            echo $e->getMessage();
+	        }
+	        return false;
+	        die();
+	    }  	
+	}
+
   	public static function getTotalMontant() {
 	    try {
 	      $sql = 'SELECT SUM(`prixTotal`) FROM `'.self::$tableName.'`';

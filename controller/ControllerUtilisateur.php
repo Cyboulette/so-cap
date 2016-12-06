@@ -219,6 +219,9 @@ class ControllerUtilisateur {
                            if($newPassword == $newPasswordConfirm) {
                               $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
                               $data['password'] = $newPassword;
+                           } else {
+                              ControllerDefault::error('Le mot de passe et sa confirmation doivent être identiques !');
+                              return;
                            }
                         }
                         $checkUpdateProfil = ModelUtilisateur::update_gen($data, 'idUtilisateur');

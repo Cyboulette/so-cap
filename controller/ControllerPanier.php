@@ -215,5 +215,21 @@ class ControllerPanier {
 			return 0;
 		}
 	}
+
+	public static function getMontantTotal() {
+		if(isset($_SESSION['panier'])) {
+			$produitsPanier = $_SESSION['panier'];
+			$montantTotal = 0;
+			foreach ($produitsPanier as $idP => $quantite) {
+				$produit = ModelProduit::select($idP);
+				if($produit != false) {
+					$montantTotal += $quantite * $produit->get('prix');
+				}
+			}
+			return $montantTotal;
+		} else {
+			return 0;
+		}
+	}
 }
 ?>
